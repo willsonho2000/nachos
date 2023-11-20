@@ -11,9 +11,18 @@ sudo apt install csh git
 
 ## Clone the repo and copy usr folder to /usr
 ```
-git clone https://github.com/Xueyi-Chen-David/Nachos.git
+git clone https://github.com/willsonho2000/nachos.git
 cd Nachos
 sudo cp -r usr /
+```
+
+if you want to clone the specific branch.
+```
+git clone -b <branch_name> https://github.com/willsonho2000/nachos.git
+```
+or
+```
+git checkout -b <local_branch_name> origin/<branch_name>
 ```
 
 ## Go to code folder and make
