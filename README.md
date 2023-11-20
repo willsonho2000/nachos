@@ -12,7 +12,7 @@ sudo apt install csh git
 ## Clone the repo and copy usr folder to /usr
 ```
 git clone https://github.com/willsonho2000/nachos.git
-cd Nachos
+cd nachos
 sudo cp -r usr /
 ```
 
