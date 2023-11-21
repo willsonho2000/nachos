@@ -22,6 +22,30 @@
 #include "callback.h"
 #include "timer.h"
 
+#include <list>
+
+// Project2 added
+class Sleep_thread {
+  public:
+    Sleep_thread( Thread* t, int x) {
+      thread_sleep  = t;
+      sleep_time    = x;
+    }
+    Thread* thread_sleep;
+    int sleep_time;
+};
+
+class Sleep_list {
+  public:
+    Sleep_list() {interrupt_count = 0;};
+    
+    void ToSleep( Thread* t, int x);
+    bool ToReady();
+    bool IsEmpty();
+    int interrupt_count;
+    std::list<Sleep_thread> Sleep_thread_list;
+};
+
 // The following class defines a software alarm clock. 
 class Alarm : public CallBackObj {
   public:
@@ -36,6 +60,9 @@ class Alarm : public CallBackObj {
 
     void CallBack();		// called when the hardware
 				// timer generates an interrupt
+
+    // Sleep list
+    Sleep_list sleeplist;
 };
 
 #endif // ALARM_H
