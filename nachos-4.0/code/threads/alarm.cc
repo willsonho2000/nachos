@@ -92,7 +92,7 @@ bool Sleep_list::ToReady() {
             cout << "Sleep_list::ToReady, a thread wake up." << endl;
             kernel->scheduler->ReadyToRun( it->thread_sleep );
             it = Sleep_thread_list.erase( it );
-        }
+        }                                                                               
     }
     return wakeup;
 }
