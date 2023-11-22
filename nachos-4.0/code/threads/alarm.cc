@@ -51,8 +51,9 @@ Alarm::CallBack()
 {
     Interrupt *interrupt = kernel->interrupt;
     MachineStatus status = interrupt->getStatus();
+    bool wakeup = sleeplist.ToReady();
     
-    if (status == IdleMode) {	// is it time to quit?
+    if (status == IdleMode && !wakeup && sleeplist.IsEmpty()) {	// is it time to quit?
         if (!interrupt->AnyFutureInterrupts()) {
 	    timer->Disable();	// turn off the timer
 	}
@@ -61,3 +62,36 @@ Alarm::CallBack()
     }
 }
 
+// Project 2 Add
+void Alarm::WaitUntil( int x ) {
+    // close interrupt
+    IntStatus oldLevel = kernel->interrupt->SetLevel(IntOff);
+    Thread *t = kernel->currentThread;
+    cout << "Alarm::WaitUntil: go to sleep." << endl;
+    sleeplist.ToSleep(t, x);
+    // open interrupt
+    kernel->interrupt->SetLevel( oldLevel );
+}
+
+bool Sleep_list::IsEmpty() {
+    return Sleep_thread_list.size() == 0;
+}
+
+void Sleep_list::ToSleep( Thread *t, int x) {
+    ASSERT( kernel->interrupt->getLevel() == IntOff );
+    Sleep_thread_list.push_back( Sleep_thread(t, interrupt_count + x) );
+    t->Sleep(false);
+}
+
+bool Sleep_list::ToReady() {
+    bool wakeup = false;
+    for ( list<Sleep_thread>::iterator it = Sleep_thread_list.begin(); it != Sleep_thread_list.end(); it++ ) {
+        if (interrupt_count >= it->sleep_time ) {
+            wakeup = true;
+            cout << "Sleep_list::ToReady, a thread wake up." << endl;
+            kernel->scheduler->ReadyToRun( it->thread_sleep );
+            it = Sleep_thread_list.erase( it );
+        }
+    }
+    return wakeup;
+}
