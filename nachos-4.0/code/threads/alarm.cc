@@ -85,6 +85,7 @@ void Sleep_list::ToSleep( Thread *t, int x) {
 
 bool Sleep_list::ToReady() {
     bool wakeup = false;
+    interrupt_count++;
     for ( list<Sleep_thread>::iterator it = Sleep_thread_list.begin(); it != Sleep_thread_list.end(); it++ ) {
         if (interrupt_count >= it->sleep_time ) {
             wakeup = true;
