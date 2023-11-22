@@ -22,6 +22,7 @@
 #include "callback.h"
 #include "timer.h"
 
+#include "thread.h"
 #include <list>
 
 // Project2 added
