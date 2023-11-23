@@ -50,7 +50,24 @@ ThreadedKernel::Initialize()
 {
     stats = new Statistics();		// collect statistics
     interrupt = new Interrupt;		// start up interrupt handling
-    scheduler = new Scheduler();	// initialize the ready queue
+    scheduler = new Scheduler(RR);	// initialize the ready queue // Set the default Scheduler RR
+    alarm = new Alarm(randomSlice);	// start up time slicing
+
+    // We didn't explicitly allocate the current thread we are running in.
+    // But if it ever tries to give up the CPU, we better have a Thread
+    // object to save its state. 
+    currentThread = new Thread("main");		
+    currentThread->setStatus(RUNNING);
+
+    interrupt->Enable();
+}
+
+// Project2 add
+void ThreadedKernel::Initialize( SchedulerType type )
+{
+    stats = new Statistics();		// collect statistics
+    interrupt = new Interrupt;		// start up interrupt handling
+    scheduler = new Scheduler( type );	// initialize the ready queue
     alarm = new Alarm(randomSlice);	// start up time slicing
 
     // We didn't explicitly allocate the current thread we are running in.

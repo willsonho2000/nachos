@@ -20,12 +20,14 @@
 enum SchedulerType {
         RR,     // Round Robin
         SJF,
-        Priority
+        Priority,
+		FIFO		// Project2 added
 };
 
 class Scheduler {
   public:
 	Scheduler();		// Initialize list of ready threads 
+	Scheduler( SchedulerType type );	// Project2 add
 	~Scheduler();				// De-allocate ready list
 
 	void ReadyToRun(Thread* thread);	
@@ -39,6 +41,8 @@ class Scheduler {
 	void Print();			// Print contents of ready list
     
     // SelfTest for scheduler is implemented in class Thread
+	SchedulerType getSchedulerType() {return schedulerType;}
+    void setSchedulerType(SchedulerType type) {schedulerType = type;}
     
   private:
 	SchedulerType schedulerType;

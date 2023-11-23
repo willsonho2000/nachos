@@ -23,6 +23,27 @@
 #include "scheduler.h"
 #include "main.h"
 
+// Project2 add
+int SJFCompare(Thread *a, Thread *b) {
+    if(a->getBurstTick() == b->getBurstTick())
+        return 0;
+    else if (a->getBurstTick() > b->getBurstTick())
+        return 1;
+    else
+        return -1;
+}
+int PRIORITYCompare(Thread *a, Thread *b) {
+    if(a->getPriority() == b->getPriority())
+        return 0;
+    else if (a->getPriority() > b->getPriority())
+        return 1;
+    else
+        return -1;
+}
+int FIFOCompare(Thread *a, Thread *b) {
+    return 1;
+}
+
 //----------------------------------------------------------------------
 // Scheduler::Scheduler
 // 	Initialize the list of ready but not running threads.
@@ -33,6 +54,27 @@ Scheduler::Scheduler()
 {
 //	schedulerType = type;
 	readyList = new List<Thread *>; 
+	toBeDestroyed = NULL;
+} 
+
+// Project2 add
+Scheduler::Scheduler( SchedulerType type )
+{
+	schedulerType = type;
+    switch (schedulerType) {
+        case RR:
+            readyList = new List<Thread *>;
+            break;  
+        case SJF:
+            readyList = new SortedList<Thread *>( SJFCompare );
+            break;  
+        case Priority:
+            readyList = new SortedList<Thread *>( PRIORITYCompare );
+            break;  
+		case FIFO:
+            readyList = new SortedList<Thread *>( FIFOCompare );
+            break;  
+    }
 	toBeDestroyed = NULL;
 } 
 
