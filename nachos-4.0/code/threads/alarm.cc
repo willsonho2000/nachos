@@ -84,15 +84,15 @@ bool Sleep_list::IsEmpty() {
 
 void Sleep_list::ToSleep( Thread *t, int x) {
     ASSERT( kernel->interrupt->getLevel() == IntOff );
-    Sleep_thread_list.push_back( Sleep_thread(t, interrupt_count + x) );
+    Sleep_thread_list.push_back( Sleep_thread(t, kernel->stats->totalTicks + x) );
     t->Sleep(false);
 }
 
 bool Sleep_list::ToReady() {
     bool wakeup = false;
-    interrupt_count++;
+    // interrupt_count++;
     for ( list<Sleep_thread>::iterator it = Sleep_thread_list.begin(); it != Sleep_thread_list.end(); it++ ) {
-        if (interrupt_count >= it->sleep_time ) {
+        if (kernel->stats->totalTicks >= it->sleep_time ) {
             wakeup = true;
             // cout << "Sleep_list::ToReady, a thread wake up." << endl;
             kernel->scheduler->ReadyToRun( it->thread_sleep );
