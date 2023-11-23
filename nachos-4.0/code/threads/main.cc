@@ -89,7 +89,7 @@ main(int argc, char **argv)
     DEBUG(dbgThread, "Entering main");
 
     kernel = new KernelType(argc, argv);
-    kernel->Initialize(type);           // Modify
+    kernel->Initialize( type );     // Project2
     
     CallOnUserAbort(Cleanup);		// if user hits ctl-C
 
