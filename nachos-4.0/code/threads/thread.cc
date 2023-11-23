@@ -447,7 +447,7 @@ void Threadinfo() {
     }
 }
 
-void SchedulingTest() {
+void Thread::SchedulingTest() {
 
     const int thread_num = 4;
     char *name[thread_num] = {"A", "B", "C", "D"};
