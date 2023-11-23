@@ -75,7 +75,7 @@ main(int argc, char **argv)
     // Project2 add
     SchedulerType type; // Scheduler type
     if(strcmp(argv[1], "FCFS") == 0) {
-        type = FIFO;
+        type = FCFS;
         cout << "Schedule Type: FCFS" << endl;
     } else if (strcmp(argv[1], "SJF") == 0) {
         type = SJF;

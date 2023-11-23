@@ -71,7 +71,7 @@ Scheduler::Scheduler( SchedulerType type )
         case Priority:
             readyList = new SortedList<Thread *>( PRIORITYCompare );
             break;  
-		case FIFO:
+		case FCFS:
             readyList = new SortedList<Thread *>( FIFOCompare );
             break;  
     }

@@ -21,7 +21,7 @@ enum SchedulerType {
         RR,     // Round Robin
         SJF,
         Priority,
-		FIFO		// Project2 added
+		FCFS		// Project2 added
 };
 
 class Scheduler {
