@@ -64,19 +64,36 @@ main(int argc, char **argv)
 	    ASSERT(i + 1 < argc);   // next argument is debug string
             debugArg = argv[i + 1];
 	    i++;
-	} else if (strcmp(argv[i], "-u") == 0) {
-            cout << "Partial usage: nachos [-z -d debugFlags]\n";
-	} else if (strcmp(argv[i], "-z") == 0) {
-            cout << copyright;
-	}
+        } else if (strcmp(argv[i], "-u") == 0) {
+                cout << "Partial usage: nachos [-z -d debugFlags]\n";
+        } else if (strcmp(argv[i], "-z") == 0) {
+                cout << copyright;
+        }
 
     }
+
+    // Project2 add
+    SchedulerType type; // Scheduler type
+    if(strcmp(argv[1], "FCFS") == 0) {
+        type = FCFS;
+        cout << "Schedule Type: FCFS" << endl;
+    } else if (strcmp(argv[1], "SJF") == 0) {
+        type = SJF;
+        cout << "Schedule Type: SJF" << endl;
+    } else if (strcmp(argv[1], "PRIORITY") == 0) {
+        type = Priority;
+        cout << "Schedule Type: Priority" << endl;
+    } else {
+        type = RR;
+        cout << "Schedule Type: RR" << endl;
+    }
+    
     debug = new Debug(debugArg);
     
     DEBUG(dbgThread, "Entering main");
 
     kernel = new KernelType(argc, argv);
-    kernel->Initialize();
+    kernel->Initialize( type );     // Project2
     
     CallOnUserAbort(Cleanup);		// if user hits ctl-C
 

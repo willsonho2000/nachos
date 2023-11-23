@@ -437,3 +437,29 @@ Thread::SelfTest()
     SimpleThread(0);
 }
 
+// Project2 added
+void Threadinfo() {
+    Thread *thread = kernel->currentThread;
+    while (thread->getBurstTick() > 0) {
+        thread->setBurstTick(thread->getBurstTick() - 1);
+        kernel->interrupt->OneTick();
+        printf("Thread: %s, remaining tick: %d.\n", kernel->currentThread->getName(), kernel->currentThread->getBurstTick());
+    }
+}
+
+void Thread::SchedulingTest() {
+
+    const int thread_num = 4;
+    char *name[thread_num] = {"A", "B", "C", "D"};
+    int thread_priority[thread_num] = {5, 4, 7, 2};
+    int thread_burst[thread_num] = {5, 9, 3, 7};
+    
+    Thread *t;
+    for ( int i = 0; i < thread_num; i++ ) {
+        t = new Thread( name[i] );
+        t->setPriority( thread_priority[i] );
+        t->setBurstTick( thread_burst[i] );
+        t->Fork((VoidFunctionPtr) Threadinfo, (void *)NULL);
+    }
+    kernel->currentThread->Yield();
+}
