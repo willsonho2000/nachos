@@ -62,7 +62,7 @@ Alarm::CallBack()
         SchedulerType type = kernel->scheduler->getSchedulerType();
         if ( type == RR || type == Priority ) {
 	        interrupt->YieldOnReturn();
-            cout << "Interrupt: YieldOnReturn." << endl;
+            // cout << "Interrupt: YieldOnReturn." << endl;
         }
     }
 }
@@ -72,7 +72,7 @@ void Alarm::WaitUntil( int x ) {
     // close interrupt
     IntStatus oldLevel = kernel->interrupt->SetLevel(IntOff);
     Thread *t = kernel->currentThread;
-    cout << "Alarm::WaitUntil: go to sleep." << endl;
+    // cout << "Alarm::WaitUntil: go to sleep." << endl;
     sleeplist.ToSleep(t, x);
     // open interrupt
     kernel->interrupt->SetLevel( oldLevel );
@@ -94,7 +94,7 @@ bool Sleep_list::ToReady() {
     for ( list<Sleep_thread>::iterator it = Sleep_thread_list.begin(); it != Sleep_thread_list.end(); it++ ) {
         if (interrupt_count >= it->sleep_time ) {
             wakeup = true;
-            cout << "Sleep_list::ToReady, a thread wake up." << endl;
+            // cout << "Sleep_list::ToReady, a thread wake up." << endl;
             kernel->scheduler->ReadyToRun( it->thread_sleep );
             it = Sleep_thread_list.erase( it );
         }                                                                               
