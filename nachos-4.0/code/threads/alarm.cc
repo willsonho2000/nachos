@@ -58,7 +58,12 @@ Alarm::CallBack()
 	    timer->Disable();	// turn off the timer
 	}
     } else {			// there's someone to preempt
-	interrupt->YieldOnReturn();
+    // Only RR or Priority can preempt
+        SchedulerType type = kernel->scheduler->getSchedulerType();
+        if ( type == RR || type == Priority ) {
+	        interrupt->YieldOnReturn();
+            cout << "Interrupt: YieldOnReturn." << endl;
+        }
     }
 }
 
