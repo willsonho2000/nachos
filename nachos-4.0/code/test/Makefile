@@ -80,4 +80,12 @@ sleep2: sleep2.o start.o
 	$(LD) $(LDFLAGS) start.o sleep2.o -o sleep2.coff
 	../bin/coff2noff sleep2.coff sleep2
 
+test_sleep1: test_sleep1.o start.o
+	$(LD) $(LDFLAGS) start.o test_sleep1.o -o test_sleep1.coff
+	../bin/coff2noff test_sleep1.coff test_sleep1
+
+test_sleep2: test_sleep2.o start.o
+	$(LD) $(LDFLAGS) start.o test_sleep2.o -o test_sleep2.coff
+	../bin/coff2noff test_sleep2.coff test_sleep2
+
 
