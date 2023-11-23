@@ -78,7 +78,7 @@ enum ThreadStatus { JUST_CREATED, RUNNING, READY, BLOCKED };
 
 class Thread {
   private:
-    // NOTE: DO NOT CHANGE the order of these first two members.
+    // NOTE: DO NOT CHANGE the order of these fi rst two members.
     // THEY MUST be in this position for SWITCH to work.
     int *stackTop;			 // the current stack pointer
     void *machineState[MachineStateSize];  // all registers except for stackTop
@@ -107,6 +107,15 @@ class Thread {
     void Print() { cout << name; }
     void SelfTest();		// test whether thread impl is working
 
+    // Project2 added
+    void setBurstTick( int t )  { burstTick = t; }
+    int  getBurstTick()         { return burstTick; }
+    void setStartTick( int t )  { startTick = t; }
+    int  getStartTick()         { return startTick; }
+    void setPriority( int p )   { threadPriority = p; }
+    int  getPriority()          { return threadPriority; }
+    static void SchedulingTest();
+
   private:
     // some of the private data for this class is listed above
     
@@ -119,6 +128,11 @@ class Thread {
     void StackAllocate(VoidFunctionPtr func, void *arg);
     				// Allocate a stack for thread.
 				// Used internally by Fork()
+
+    // Project2 added
+    int burstTick;        // the tick needed for a thread
+    int startTick;        // the start tick of a thread
+    int threadPriority;   // the priority of a thread
 
 #ifdef USER_PROGRAM
 // A thread running a user program actually has *two* sets of CPU registers -- 
