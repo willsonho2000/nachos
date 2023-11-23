@@ -76,12 +76,16 @@ main(int argc, char **argv)
     SchedulerType type; // Scheduler type
     if(strcmp(argv[1], "FCFS") == 0) {
         type = FIFO;
+        cout << "Schedule Type: FCFS" << endl;
     } else if (strcmp(argv[1], "SJF") == 0) {
         type = SJF;
+        cout << "Schedule Type: SJF" << endl;
     } else if (strcmp(argv[1], "PRIORITY") == 0) {
         type = Priority;
+        cout << "Schedule Type: Priority" << endl;
     } else {
         type = RR;
+        cout << "Schedule Type: RR" << endl;
     }
     
     debug = new Debug(debugArg);
