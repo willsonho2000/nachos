@@ -109,8 +109,10 @@ Scheduler::FindNextToRun ()
     ASSERT(kernel->interrupt->getLevel() == IntOff);
 
     if (readyList->IsEmpty()) {
+        cout << "List is empty" << endl;
 	return NULL;
     } else {
+        Print();
     	return readyList->RemoveFront();
     }
 }
