@@ -57,11 +57,11 @@ void Alarm::CallBack() {
             timer->Disable();	// turn off the timer
         }
     } 
-    // else {			// there's someone to preempt
-	// if(kernel->scheduler->getSchedulerType() == RR){        
-	//     interrupt->YieldOnReturn();
-	// }
-    // }
+    else {			// there's someone to preempt
+	if(kernel->scheduler->getSchedulerType() == RR){        
+	    interrupt->YieldOnReturn();
+	}
+    }
 }
 
 void Alarm::WaitUntil(int x) {
