@@ -454,9 +454,11 @@ threadBody() {
     while (thread->getBurstTime() > 0) {
         q++;
         thread->setBurstTime(thread->getBurstTime() - 1);
-        if (q % 4 == 0) {kernel->interrupt->YieldOnReturn();}
         kernel->interrupt->OneTick();
 	    cout << kernel->currentThread->getName() << ": remaining " << kernel->currentThread->getBurstTime() <<endl;
+        if (q % 4 == 0) {
+            kernel->currentThread->Yield();
+        }
     }
 }
 
