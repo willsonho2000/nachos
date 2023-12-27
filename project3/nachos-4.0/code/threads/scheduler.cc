@@ -112,8 +112,6 @@ Scheduler::FindNextToRun ()
         cout << "List is empty" << endl;
 	return NULL;
     } else {
-        Print();
-        cout << "\n";
     	return readyList->RemoveFront();
     }
 }
@@ -217,4 +215,5 @@ Scheduler::Print()
 {
     cout << "Ready list contents:\n";
     readyList->Apply(ThreadPrint);
+    cout << "\n";
 }
