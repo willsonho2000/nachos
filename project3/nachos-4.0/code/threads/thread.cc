@@ -457,7 +457,7 @@ threadBody() {
         thread->setBurstTime(thread->getBurstTime() - 1);
         kernel->interrupt->OneTick();
 	    cout << kernel->currentThread->getName() << ": remaining " << kernel->currentThread->getBurstTime() <<endl;
-        if (q % 4 == 0) {
+        if (q % 4 == 0 && kernel->scheduler->getSchedulerType() == RR) {
             kernel->currentThread->Yield();
         }
     }
