@@ -123,6 +123,7 @@ AddrSpace::Load(char *fileName)
 						// virtual memory
 
     DEBUG(dbgAddr, "Initializing address space: " << numPages << ", " << size);
+    DEBUG(dbgAddr, "Number of Physical pages: " << NumPhysPages);
     // set a new pagetable
     // pageTable = new TranslationEntry[numPages];
     // for (unsigned int i = 0, j = 0; i < numPages; i++) {
