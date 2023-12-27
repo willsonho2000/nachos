@@ -317,8 +317,8 @@ void
 Lseek(int fd, int offset, int whence)
 {
     int retVal = lseek(fd, offset, whence);
-    cout << "fd: " << fd << ", offset: " << offset << ", whence: " << whence << "\n";
-    cout << "retVal: " << retVal << "\n"; 
+    // cout << "fd: " << fd << ", offset: " << offset << ", whence: " << whence << "\n";
+    // cout << "retVal: " << retVal << "\n"; 
     ASSERT(retVal >= 0);
 }
 

@@ -31,6 +31,7 @@ class AddrSpace {
     void RestoreState();		// info on a context switch 
 
     static bool UsedPhyPages[NumPhysPages];    // store the occupied physical pages
+    bool *UsedSwapPages;
 
   private:
     TranslationEntry *pageTable;	// Assume linear page table translation
