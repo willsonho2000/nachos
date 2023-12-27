@@ -114,7 +114,7 @@ ThreadedKernel::SelfTest() {
    
    //currentThread->SelfTest();	// test thread switching
 
-   //Thread::SchedulingTest();
+   Thread::SchedulingTest();
    
    				// test semaphore operation
    //semaphore = new Semaphore("test", 0);
