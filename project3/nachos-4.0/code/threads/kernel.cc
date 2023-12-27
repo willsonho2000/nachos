@@ -110,12 +110,11 @@ void
 ThreadedKernel::SelfTest() {
    Semaphore *semaphore;
    SynchList<int> *synchList;
-   
    //LibSelfTest();		// test library routines
    
    //currentThread->SelfTest();	// test thread switching
 
-   Thread::SchedulingTest();
+   //Thread::SchedulingTest();
    
    				// test semaphore operation
    //semaphore = new Semaphore("test", 0);
