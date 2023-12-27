@@ -57,14 +57,6 @@ void Alarm::CallBack() {
             timer->Disable();	// turn off the timer
         }
     } 
-    else {			// there's someone to preempt
-	    if(kernel->scheduler->getSchedulerType() == RR){  
-            // if ((kernel->currentThread->getBurstTime()-1) % 4 == 0) {
-            //     cout << " Trigger yield, Thread: " << kernel->currentThread->getName() << " remaining time " << kernel->currentThread->getBurstTime() << endl;
-            //     interrupt->YieldOnReturn();
-            // }
-	    }
-    }
 }
 
 void Alarm::WaitUntil(int x) {
