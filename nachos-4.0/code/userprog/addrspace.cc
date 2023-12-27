@@ -58,7 +58,6 @@ AddrSpace::AddrSpace()
     pageTable = new TranslationEntry[NumPhysPages];
     for (unsigned int i = 0; i < NumPhysPages; i++) {
         pageTable[i].virtualPage = i;	// for now, virt page # = phys page #
-
         pageTable[i].physicalPage = i;
     //	pageTable[i].physicalPage = 0;
         pageTable[i].valid = TRUE;
@@ -125,19 +124,19 @@ AddrSpace::Load(char *fileName)
 
     DEBUG(dbgAddr, "Initializing address space: " << numPages << ", " << size);
     // set a new pagetable
-    pageTable = new TranslationEntry[numPages];
-    for (unsigned int i = 0, j = 0; i < numPages; i++) {
-        pageTable[i].virtualPage = i;   // for now, virt page # != phys page #
+    // pageTable = new TranslationEntry[numPages];
+    // for (unsigned int i = 0, j = 0; i < numPages; i++) {
+    //     pageTable[i].virtualPage = i;   // for now, virt page # != phys page #
 
-        while ( j < NumPhysPages && AddrSpace::UsedPhyPages[j] == true )
-            j++;
-        pageTable[i].physicalPage = j;
-        AddrSpace::UsedPhyPages[j] = true;
-        pageTable[i].valid = TRUE;
-        pageTable[i].use = FALSE;
-        pageTable[i].dirty = FALSE;
-        pageTable[i].readOnly = FALSE;
-    }
+    //     while ( j < NumPhysPages && AddrSpace::UsedPhyPages[j] == true )
+    //         j++;
+    //     pageTable[i].physicalPage = j;
+    //     AddrSpace::UsedPhyPages[j] = true;
+    //     pageTable[i].valid = TRUE;
+    //     pageTable[i].use = FALSE;
+    //     pageTable[i].dirty = FALSE;
+    //     pageTable[i].readOnly = FALSE;
+    // }
 
 //    cout << noffH.code.virtualAddr << "," << noffH.initData.virtualAddr << endl;
 // then, copy in the code and data segments into memory
@@ -147,8 +146,8 @@ AddrSpace::Load(char *fileName)
         unsigned int PhysAddr = pageTable[noffH.code.virtualAddr/PageSize].physicalPage*PageSize + noffH.code.virtualAddr%PageSize;
 //      cout << PhysAddr << endl;
         executable->ReadAt(
-//              &(kernel->machine->mainMemory[noffH.code.virtualAddr]),
-                &(kernel->machine->mainMemory[PhysAddr]),
+             &(kernel->machine->mainMemory[noffH.code.virtualAddr]),
+                // &(kernel->machine->mainMemory[PhysAddr]),
                         noffH.code.size, noffH.code.inFileAddr);
     }
         if (noffH.initData.size > 0) {
@@ -157,8 +156,8 @@ AddrSpace::Load(char *fileName)
         unsigned int PhysAddr = pageTable[noffH.initData.virtualAddr/PageSize].physicalPage*PageSize + noffH.initData.virtualAddr%PageSize;
 //      cout << PhysAddr << endl;
         executable->ReadAt(
-//              &(kernel->machine->mainMemory[noffH.initData.virtualAddr]),
-                &(kernel->machine->mainMemory[PhysAddr]),
+             &(kernel->machine->mainMemory[noffH.initData.virtualAddr]),
+                // &(kernel->machine->mainMemory[PhysAddr]),
                         noffH.initData.size, noffH.initData.inFileAddr);
     }
 
