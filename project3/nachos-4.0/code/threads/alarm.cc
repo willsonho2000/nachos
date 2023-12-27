@@ -58,10 +58,9 @@ void Alarm::CallBack() {
         }
     } 
     else {			// there's someone to preempt
-	if(kernel->scheduler->getSchedulerType() == RR){  
-        if ((kernel->currentThread->getBurstTime()-1) % 4 == 0) 
-        {   
-	        interrupt->YieldOnReturn();}
+	    if(kernel->scheduler->getSchedulerType() == RR){  
+            if ((kernel->currentThread->getBurstTime()-1) % 4 == 0) 
+                interrupt->YieldOnReturn();
 	    }
     }
 }
