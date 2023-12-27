@@ -113,6 +113,7 @@ Scheduler::FindNextToRun ()
 	return NULL;
     } else {
         Print();
+        cout << "\n";
     	return readyList->RemoveFront();
     }
 }

@@ -449,8 +449,12 @@ Thread::SelfTest()
 void
 threadBody() {
     Thread *thread = kernel->currentThread;
+    int quantum = 4;
+    int q = 0;
     while (thread->getBurstTime() > 0) {
+        q++;
         thread->setBurstTime(thread->getBurstTime() - 1);
+        if (q % 4 == 0) {kernel->interrupt->YieldOnReturn();}
         kernel->interrupt->OneTick();
 	    cout << kernel->currentThread->getName() << ": remaining " << kernel->currentThread->getBurstTime() <<endl;
     }

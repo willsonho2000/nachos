@@ -59,10 +59,10 @@ void Alarm::CallBack() {
     } 
     else {			// there's someone to preempt
 	    if(kernel->scheduler->getSchedulerType() == RR){  
-            if ((kernel->currentThread->getBurstTime()-1) % 4 == 0) {
-                cout << " Trigger yield, Thread: " << kernel->currentThread->getName() << " remaining time " << kernel->currentThread->getBurstTime() << endl;
-                interrupt->YieldOnReturn();
-            }
+            // if ((kernel->currentThread->getBurstTime()-1) % 4 == 0) {
+            //     cout << " Trigger yield, Thread: " << kernel->currentThread->getName() << " remaining time " << kernel->currentThread->getBurstTime() << endl;
+            //     interrupt->YieldOnReturn();
+            // }
 	    }
     }
 }
