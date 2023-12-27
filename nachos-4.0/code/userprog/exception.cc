@@ -89,6 +89,12 @@ ExceptionHandler(ExceptionType which)
  		    break;
 	    }
 	    break;
+	case PageFaultException:
+		cout << "Raise PageFaultException \n";
+		break;
+	case AddressErrorException:
+		cout << "Raise AddressErrorException \n";
+		break;
 	default:
 	    cerr << "Unexpected user mode exception " << which << "\n";
 	    break;
