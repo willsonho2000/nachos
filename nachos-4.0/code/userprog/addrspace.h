@@ -18,7 +18,7 @@
 #include <string.h>
 
 #define UserStackSize		1024 	// increase this as necessary!
-#define NumVirtPages    NumPhysPages*2
+#define NumVirtPages    NumPhysPages*4
 
 class AddrSpace {
   public:
@@ -32,7 +32,7 @@ class AddrSpace {
     void RestoreState();		// info on a context switch 
 
     static bool UsedPhyPages[NumPhysPages];    // store the occupied physical pages
-    static bool UsedVirPages[NumVirtPages];    // store the occupied physical pages
+    static bool UsedVirPages[NumVirtPages];    // store the occupied virtual pages
     static int  RevePhyPages[NumPhysPages];    // store the ind of virtual pages of the occupied physical pages
 
   private:
