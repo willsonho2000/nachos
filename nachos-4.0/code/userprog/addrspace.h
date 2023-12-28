@@ -41,6 +41,7 @@ class AddrSpace {
 
     bool Load(char *fileName);		// Load the program into memory
 					// return false if not found
+    bool page_is_load;          // check whether the page have been load for initialization
 
     void InitRegisters();		// Initialize user-level CPU registers,
 					// before jumping to user code
