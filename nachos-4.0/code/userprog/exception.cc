@@ -81,10 +81,10 @@ ExceptionHandler(ExceptionType which)
 		// perform page replacement, write victim frame to disk, read desired frame to memory
 		/// take the value of victim out
 		bcopy( &kernel->machine->mainMemory[victim*PageSize], buffer1, PageSize );
-		kernel->synchDisk->ReadSector( pageTable[vpn].virtualPage - NumPhysPages, buffer2 );	
+		kernel->synchDisk->ReadSector( pageTable[vpn].virtualPage, buffer2 );	
 		/// write the value into memory
 		bcopy( buffer2, &kernel->machine->mainMemory[victim*PageSize], PageSize );		
-		kernel->synchDisk->WriteSector( pageTable[vpn].virtualPage - NumPhysPages, buffer1 );	// write the swap
+		kernel->synchDisk->WriteSector( pageTable[vpn].virtualPage, buffer1 );	// write the swap
 
 		// update page status
 		pageTable[AddrSpace::RevePhyPages[victim]].valid = false;
