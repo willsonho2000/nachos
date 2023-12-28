@@ -138,7 +138,7 @@ AddrSpace::Load(char *fileName)
         j = 0;  // j starts from 0
         // if j > the size of the phys page, load to swap
         while ( j < NumPhysPages && UsedPhyPages[j] == true ) {j++;}
-        if ( j < NumPhysPages ){
+        if ( j < NumPhysPages ) {
             // assign the same index for virt and phys page
             pageTable[i].physicalPage = j;
             UsedPhyPages[j] = true;
@@ -148,7 +148,7 @@ AddrSpace::Load(char *fileName)
         }
         else {  // need to use swap
             int k = 0;
-            while ( k < NumPhysPages && UsedPhyPages[j] == true ) {k++;}
+            while ( k < NumVirtPages && UsedVirPages[j] == true ) {k++;}
             pageTable[i].virtualPage = k;
             UsedVirPages[k] = true;
             pageTable[i].valid = false; // for swap, it is not valid
