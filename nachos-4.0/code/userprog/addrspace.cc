@@ -150,7 +150,7 @@ AddrSpace::Load(char *fileName)
         }
         else {  // need to use swap
             int k = 0;
-            while ( k < NumVirtPages && UsedVirPages[j] == true ) {k++;}
+            while ( k < NumVirtPages && UsedVirPages[k] == true ) {k++;}
             pageTable[i].virtualPage = k;
             UsedVirPages[k] = true;
             pageTable[i].valid = false; // for swap, it is not valid
