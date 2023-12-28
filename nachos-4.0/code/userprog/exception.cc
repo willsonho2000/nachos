@@ -81,17 +81,17 @@ ExceptionHandler(ExceptionType which)
 		// perform page replacement, write victim frame to disk, read desired frame to memory
 		/// take out the value of victim
 		bcopy( &kernel->machine->mainMemory[victim*PageSize], buffer1, PageSize );
-		kernel->synchDisk->ReadSector( kernel->machine->pageTabl[vpn].virtualPage, buffer2 );	
+		kernel->synchDisk->ReadSector( kernel->machine->pageTable[vpn].virtualPage, buffer2 );	
 		/// write the value into memory
 		bcopy( buffer2, &kernel->machine->mainMemory[victim*PageSize], PageSize );		
-		kernel->synchDisk->WriteSector( kernel->machine->pageTabl[vpn].virtualPage, buffer1 );	// write the swap
+		kernel->synchDisk->WriteSector( kernel->machine->pageTable[vpn].virtualPage, buffer1 );	// write the swap
 
 		// update page status
-		kernel->machine->pageTabl[AddrSpace::RevePhyPages[victim]].valid = false;
-		kernel->machine->pageTabl[AddrSpace::RevePhyPages[victim]].virtualPage = kernel->machine->pageTabl[vpn].virtualPage;
+		kernel->machine->pageTable[AddrSpace::RevePhyPages[victim]].valid = false;
+		kernel->machine->pageTable[AddrSpace::RevePhyPages[victim]].virtualPage = kernel->machine->pageTable[vpn].virtualPage;
 
-		kernel->machine->pageTabl[vpn].valid = true;
-		kernel->machine->pageTabl[vpn].physicalPage = victim;
+		kernel->machine->pageTable[vpn].valid = true;
+		kernel->machine->pageTable[vpn].physicalPage = victim;
 		
 		AddrSpace::RevePhyPages[victim] = vpn;
 
