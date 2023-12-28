@@ -59,7 +59,7 @@ ExceptionHandler(ExceptionType which)
 	// add for project3
 	if ( which ==  PageFaultException ) {
 		kernel->stats->numPageFaults++; // page fault
-		cout << "Raise PageFaultException \n";
+		// cout << "Raise PageFaultException \n";
 		TranslationEntry *pageTable = kernel->machine->pageTable;
 
 		int victim;		// find the page victim

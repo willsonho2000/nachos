@@ -128,6 +128,8 @@ AddrSpace::Load(char *fileName)
 
     DEBUG(dbgAddr, "Initializing address space: " << numPages << ", " << size);
     DEBUG(dbgAddr, "Number of Physical pages: " << NumPhysPages);
+
+    cout << "Total Size: " << size << endl;
     
     // swap management
     UsedSwapPages = new bool[numPages - NumPhysPages];
