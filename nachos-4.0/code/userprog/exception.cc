@@ -61,7 +61,7 @@ ExceptionHandler(ExceptionType which)
 
 		int victim;	// find the page victim
 		unsigned int j;
-		int BadVAddr = machine->ReadRegister(BadVAddrReg); // The failing virtual address on an exception
+		int BadVAddr = kernel->machine->ReadRegister(BadVAddrReg); // The failing virtual address on an exception
 
 		DEBUG(dbgAddr, "Bad Virtual Address: " << BadVAddrReg);
 
