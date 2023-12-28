@@ -54,6 +54,12 @@ ExceptionHandler(ExceptionType which)
 	int	type = kernel->machine->ReadRegister(2);
 	int	val;
 
+	// add for project3
+	if ( which ==  PageFaultException ) {
+		cout << "Raise PageFaultException \n";
+		return;
+	}
+
     switch (which) {
 	case SyscallException:
 	    switch(type) {
@@ -89,9 +95,6 @@ ExceptionHandler(ExceptionType which)
  		    break;
 	    }
 	    break;
-	case PageFaultException:
-		cout << "Raise PageFaultException \n";
-		break;
 	case AddressErrorException:
 		cout << "Raise AddressErrorException \n";
 		break;
