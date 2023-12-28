@@ -221,6 +221,7 @@ AddrSpace::Execute(char *fileName)
     this->InitRegisters();		// set the initial register values
     this->RestoreState();		// load page table register
     page_is_load = true;
+    cout << "Pass here\n";
 
     kernel->machine->Run();		// jump to the user progam
 
