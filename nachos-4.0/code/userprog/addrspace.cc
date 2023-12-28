@@ -297,5 +297,5 @@ void AddrSpace::RestoreState()
 {
     kernel->machine->pageTable = pageTable;
     kernel->machine->pageTableSize = numPages;
-    cout << pageTable << "\n";
+    cout << (pageTable == NULL) << "\n";
 }
