@@ -93,7 +93,7 @@ ExceptionHandler(ExceptionType which)
 		pageTable[vpn].valid = true;
 		pageTable[vpn].physicalPage=victim;
 		
-		RevePhyPages[victim] = vpn;
+		AddrSpace::RevePhyPages[victim] = vpn;
 
 		return;
 	}
