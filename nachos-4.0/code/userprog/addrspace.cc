@@ -133,7 +133,7 @@ AddrSpace::Load(char *fileName)
     // set a virtual pagetable
     pageTable = new TranslationEntry[numPages];
     for (unsigned int i = 0, j = 0; i < numPages; i++) {
-
+        j = 0;  // j starts from 0
         // if j > the size of the phys page, load to swap
         while ( j < numPages ) {
             if ( j < NumPhysPages && AddrSpace::UsedPhyPages[j] == true ){
@@ -173,9 +173,9 @@ AddrSpace::Load(char *fileName)
         if (noffH.code.size > 0) {
             unsigned int index = pageTable[i].virtualPage;
             
-            DEBUG(dbgAddr, "Initializing code segment.");
+            // DEBUG(dbgAddr, "Initializing code segment.");
             // DEBUG(dbgAddr, noffH.code.virtualAddr << ", " << noffH.code.size);
-            DEBUG(dbgAddr, index*PageSize << ", " << PageSize);
+            // DEBUG(dbgAddr, index*PageSize << ", " << PageSize);
 
             if ( pageTable[i].valid ) {
                 executable->ReadAt(&(kernel->machine->mainMemory[index*PageSize]), PageSize, noffH.code.inFileAddr+(i*PageSize));
@@ -300,5 +300,4 @@ void AddrSpace::RestoreState()
 {
     kernel->machine->pageTable = pageTable;
     kernel->machine->pageTableSize = numPages;
-    cout << (pageTable == NULL) << "\n";
 }

@@ -11,7 +11,7 @@
 
 #ifndef USERKERNEL_H  
 #define USERKERNEL_H
-#define FILESYS	// enable swap
+#define FILESYS	1 // enable swap
 
 #include "kernel.h"
 #include "filesys.h"
