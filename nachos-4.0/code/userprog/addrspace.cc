@@ -171,10 +171,12 @@ AddrSpace::Load(char *fileName)
     // Modify for project3
     for (unsigned int i = 0; i < numPages; i++) {
         if (noffH.code.size > 0) {
-            DEBUG(dbgAddr, "Initializing code segment.");
-            DEBUG(dbgAddr, noffH.code.virtualAddr << ", " << noffH.code.size);
-
             unsigned int index = pageTable[i].virtualPage;
+            
+            DEBUG(dbgAddr, "Initializing code segment.");
+            // DEBUG(dbgAddr, noffH.code.virtualAddr << ", " << noffH.code.size);
+            DEBUG(dbgAddr, index*PageSize << ", " << PageSize);
+
             if ( pageTable[i].valid ) {
                 executable->ReadAt(&(kernel->machine->mainMemory[index*PageSize]), PageSize, noffH.code.inFileAddr+(i*PageSize));
             }
