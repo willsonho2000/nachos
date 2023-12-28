@@ -166,7 +166,7 @@ AddrSpace::Load(char *fileName)
             // DEBUG(dbgAddr, noffH.code.virtualAddr << ", " << noffH.code.size);
             // DEBUG(dbgAddr, index*PageSize << ", " << PageSize);
 
-            if ( pageTable[i].valid ) {
+            if ( pageTable[i].valid == true ) {
                 int index = pageTable[i].physicalPage;
                 executable->ReadAt(&(kernel->machine->mainMemory[index*PageSize]), PageSize, noffH.code.inFileAddr+(i*PageSize));
             }
