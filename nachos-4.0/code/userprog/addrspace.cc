@@ -168,17 +168,29 @@ AddrSpace::Load(char *fileName)
         pageTable[i].readOnly = FALSE;
     }
 
-        // then, copy in the code and data segments into memory
+    // then, copy in the code and data segments into memory
+    // Modify for project3
+    for (unsigned int i = 0; i < numPages; i++) {
         if (noffH.code.size > 0) {
             DEBUG(dbgAddr, "Initializing code segment.");
             DEBUG(dbgAddr, noffH.code.virtualAddr << ", " << noffH.code.size);
-            if 
-            unsigned int PhysAddr = pageTable[noffH.code.virtualAddr/PageSize].physicalPage*PageSize + noffH.code.virtualAddr%PageSize;
-            executable->ReadAt(
-                &(kernel->machine->mainMemory[noffH.code.virtualAddr]),
-                    // &(kernel->machine->mainMemory[PhysAddr]),
-                            noffH.code.size, noffH.code.inFileAddr);
+
+            unsigned int index = pageTable[i].virtualPage;
+            if ( pageTable[i].valid ) {
+                executable->ReadAt(&(kernel->machine->mainMemory[index*PageSize]), PageSize, noffH.code.inFileAddr+(i*PageSize));
+            }
+            else {
+                char *buffer;
+                buffer = new char[PageSize];
+                executable->ReadAt(buffer, PageSize, noffH.code.inFileAddr+(i*PageSize));
+                kernel->SwapDisk->WriteSector(index - NumPhysPages, buffer);    // write in swap space
+            }
+            // executable->ReadAt(
+            //     &(kernel->machine->mainMemory[noffH.code.virtualAddr]),
+            //         // &(kernel->machine->mainMemory[PhysAddr]),
+            //                 noffH.code.size, noffH.code.inFileAddr);
         }
+        // The below part seens to be unused in project3, could ignored
         if (noffH.initData.size > 0) {
             DEBUG(dbgAddr, "Initializing data segment.");
             DEBUG(dbgAddr, noffH.initData.virtualAddr << ", " << noffH.initData.size);
@@ -188,6 +200,7 @@ AddrSpace::Load(char *fileName)
                     // &(kernel->machine->mainMemory[PhysAddr]),
                             noffH.initData.size, noffH.initData.inFileAddr);
         }
+    }
 
     delete executable;			// close file
     return TRUE;			// success
