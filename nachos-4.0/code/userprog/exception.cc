@@ -24,6 +24,7 @@
 #include "copyright.h"
 #include "main.h"
 #include "syscall.h"
+#include "machine.h"
 
 //----------------------------------------------------------------------
 // ExceptionHandler
@@ -56,16 +57,46 @@ ExceptionHandler(ExceptionType which)
 
 	// add for project3
 	if ( which ==  PageFaultException ) {
+		kernel->stats->numPageFaults++; // page fault
 		cout << "Raise PageFaultException \n";
 		TranslationEntry *pageTable = kernel->machine->pageTable;
 
-		int victim;	// find the page victim
-		unsigned int j;
-		int BadVAddr = kernel->machine->ReadRegister(BadVAddrReg); // The failing virtual address on an exception
+		int victim;		// find the page victim
+		val = kernel->machine->ReadRegister(BadVAddrReg); // The failing virtual address on an exception
 
-		DEBUG(dbgAddr, "Bad Virtual Address: " << BadVAddrReg);
+		DEBUG(dbgAddr, "Bad Virtual Address: " << BadVAddr);
 
-		// return;
+		vpn = (unsigned) val / PageSize;
+    	offset = (unsigned) val % PageSize;
+
+		char *buffer1;
+		char *buffer2;
+		buffer1 = new char[PageSize];
+		buffer2 = new char[PageSize];
+
+		//Random
+		victim = ( rand() % PageSize );
+
+		// Find where the location of virtual page contain victim
+		for ( int i = 0; i < )
+
+		// perform page replacement, write victim frame to disk, read desired frame to memory
+		bcopy( &mainMemory[victim*PageSize], buffer1, PageSize );	// take the value of victim out
+		kernel->SwapDisk->ReadSector( pageTable[vpn].virtualPage - NumPhysPages, buffer2 );	
+		
+		bcopy( buffer2, &mainMemory[victim*PageSize], PageSize );	// write the value into memory		
+		kernel->SwapDisk->WriteSector( pageTable[vpn].virtualPage - NumPhysPages, buffer1 );	// write the swap
+
+		// update page status
+		pageTable[RevePhyPages[victim]].valid = false;
+		pageTable[RevePhyPages[victim]].virtualPage = pageTable[vpn].virtualPage;
+
+		pageTable[vpn].valid = true;
+		pageTable[vpn].physicalPage=victim;
+		
+		RevePhyPages[victim] = vpn;
+
+		return;
 	}
 	
 
