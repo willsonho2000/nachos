@@ -282,6 +282,7 @@ void AddrSpace::SaveState()
 {
         pageTable=kernel->machine->pageTable;
         numPages=kernel->machine->pageTableSize;
+        cout << "savestate happen\n";
 }
 
 //----------------------------------------------------------------------
