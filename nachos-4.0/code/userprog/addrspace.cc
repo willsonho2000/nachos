@@ -43,8 +43,8 @@ SwapHeader (NoffHeader *noffH)
     noffH->uninitData.inFileAddr = WordToHost(noffH->uninitData.inFileAddr);
 }
 
-bool UsedPhyPages[NumPhysPages] = {0};  // initialize the elements
-int  RevePhyPages[NumPhysPages] = {0};  // initialize the elements
+bool AddrSpace::UsedPhyPages[NumPhysPages] = {0};  // initialize the elements
+int  AddrSpace::RevePhyPages[NumPhysPages] = {0};  // initialize the elements
 
 //----------------------------------------------------------------------
 // AddrSpace::AddrSpace
