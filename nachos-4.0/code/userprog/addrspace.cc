@@ -98,7 +98,6 @@ AddrSpace::Load(char *fileName)
     OpenFile *executable = kernel->fileSystem->Open(fileName);
     NoffHeader noffH;
     unsigned int size;
-    unsigned int tmp;
 
     if (executable == NULL) {
 	cerr << "Unable to open file " << fileName << "\n";
@@ -183,7 +182,7 @@ AddrSpace::Load(char *fileName)
                 char *buffer;
                 buffer = new char[PageSize];
                 executable->ReadAt(buffer, PageSize, noffH.code.inFileAddr+(i*PageSize));
-                kernel->SwapDisk->WriteSector(index - NumPhysPages, buffer);    // write in swap space
+                kernel->synchDisk->WriteSector(index - NumPhysPages, buffer);    // write in swap space
             }
             // executable->ReadAt(
             //     &(kernel->machine->mainMemory[noffH.code.virtualAddr]),
