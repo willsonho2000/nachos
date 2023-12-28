@@ -130,8 +130,6 @@ AddrSpace::Load(char *fileName)
     DEBUG(dbgAddr, "Initializing address space: " << numPages << ", " << size);
     DEBUG(dbgAddr, "Number of Physical pages: " << NumPhysPages);
 
-    cout << "Total Size: " << size << endl;
-    
     // set a pagetable
     pageTable = new TranslationEntry[numPages];
 
