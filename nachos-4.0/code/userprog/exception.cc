@@ -57,8 +57,17 @@ ExceptionHandler(ExceptionType which)
 	// add for project3
 	if ( which ==  PageFaultException ) {
 		cout << "Raise PageFaultException \n";
-		return;
+		TranslationEntry *pageTable = kernel->machine->pageTable;
+
+		int victim;	// find the page victim
+		unsigned int j;
+		int BadVAddr = machine->ReadRegister(BadVAddrReg); // The failing virtual address on an exception
+
+		DEBUG(dbgAddr, "Bad Virtual Address: " << BadVAddrReg);
+
+		// return;
 	}
+	
 
     switch (which) {
 	case SyscallException:
@@ -88,6 +97,7 @@ ExceptionHandler(ExceptionType which)
 			DEBUG(dbgAddr, "Program exit\n");
 			val=kernel->machine->ReadRegister(4);
 			cout << "return value:" << val << endl;
+			delete kernel->currentThread->space;
 			kernel->currentThread->Finish();
 			break;
 		default:
