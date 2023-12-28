@@ -60,7 +60,6 @@ ExceptionHandler(ExceptionType which)
 	if ( which ==  PageFaultException ) {
 		kernel->stats->numPageFaults++; // page fault
 		// cout << "Raise PageFaultException \n";
-		TranslationEntry *pageTable = kernel->machine->pageTable;
 
 		int victim;		// find the page victim
 		val = kernel->machine->ReadRegister(BadVAddrReg); // The failing virtual address on an exception

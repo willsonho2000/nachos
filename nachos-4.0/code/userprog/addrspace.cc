@@ -134,6 +134,8 @@ AddrSpace::Load(char *fileName)
     
     // set a pagetable
     pageTable = new TranslationEntry[numPages];
+
+    AddrSpace::RestoreState();
     for (unsigned int i = 0, j = 0; i < numPages; i++) {
         j = 0;  // j starts from 0
         // if j > the size of the phys page, load to swap
@@ -221,7 +223,6 @@ AddrSpace::Execute(char *fileName)
     this->InitRegisters();		// set the initial register values
     this->RestoreState();		// load page table register
     page_is_load = true;
-    cout << "Pass here\n";
 
     kernel->machine->Run();		// jump to the user progam
 
@@ -274,10 +275,10 @@ AddrSpace::InitRegisters()
 
 void AddrSpace::SaveState() 
 {
-    if ( page_is_load ) {
+    // if ( page_is_load ) {
         pageTable=kernel->machine->pageTable;
         numPages=kernel->machine->pageTableSize;
-    }
+    // }
 }
 
 //----------------------------------------------------------------------
