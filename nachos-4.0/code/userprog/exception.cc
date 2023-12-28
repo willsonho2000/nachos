@@ -25,6 +25,7 @@
 #include "main.h"
 #include "syscall.h"
 #include "machine.h"
+#include "addrspace.h
 
 //----------------------------------------------------------------------
 // ExceptionHandler
@@ -66,30 +67,28 @@ ExceptionHandler(ExceptionType which)
 
 		DEBUG(dbgAddr, "Bad Virtual Address: " << BadVAddr);
 
-		vpn = (unsigned) val / PageSize;
-    	offset = (unsigned) val % PageSize;
+		int vpn = (unsigned) val / PageSize;
+    	int offset = (unsigned) val % PageSize;
 
 		char *buffer1;
 		char *buffer2;
 		buffer1 = new char[PageSize];
 		buffer2 = new char[PageSize];
 
-		//Random
+		// Random
 		victim = ( rand() % PageSize );
 
-		// Find where the location of virtual page contain victim
-		for ( int i = 0; i < )
-
 		// perform page replacement, write victim frame to disk, read desired frame to memory
-		bcopy( &mainMemory[victim*PageSize], buffer1, PageSize );	// take the value of victim out
-		kernel->SwapDisk->ReadSector( pageTable[vpn].virtualPage - NumPhysPages, buffer2 );	
-		
-		bcopy( buffer2, &mainMemory[victim*PageSize], PageSize );	// write the value into memory		
-		kernel->SwapDisk->WriteSector( pageTable[vpn].virtualPage - NumPhysPages, buffer1 );	// write the swap
+		/// take the value of victim out
+		bcopy( &kernel->machine->mainMemory[victim*PageSize], buffer1, PageSize );
+		kernel->synchDisk->ReadSector( pageTable[vpn].virtualPage - NumPhysPages, buffer2 );	
+		/// write the value into memory
+		bcopy( buffer2, &kernel->machine->mainMemory[victim*PageSize], PageSize );		
+		kernel->synchDisk->WriteSector( pageTable[vpn].virtualPage - NumPhysPages, buffer1 );	// write the swap
 
 		// update page status
-		pageTable[RevePhyPages[victim]].valid = false;
-		pageTable[RevePhyPages[victim]].virtualPage = pageTable[vpn].virtualPage;
+		pageTable[AddrSpace::RevePhyPages[victim]].valid = false;
+		pageTable[AddrSpace::RevePhyPages[victim]].virtualPage = pageTable[vpn].virtualPage;
 
 		pageTable[vpn].valid = true;
 		pageTable[vpn].physicalPage=victim;
