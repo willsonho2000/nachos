@@ -25,7 +25,7 @@
 #include "main.h"
 #include "syscall.h"
 #include "machine.h"
-#include "addrspace.h
+#include "addrspace.h"
 
 //----------------------------------------------------------------------
 // ExceptionHandler
@@ -65,7 +65,7 @@ ExceptionHandler(ExceptionType which)
 		int victim;		// find the page victim
 		val = kernel->machine->ReadRegister(BadVAddrReg); // The failing virtual address on an exception
 
-		DEBUG(dbgAddr, "Bad Virtual Address: " << BadVAddr);
+		DEBUG(dbgAddr, "Bad Virtual Address: " << val);
 
 		int vpn = (unsigned) val / PageSize;
     	int offset = (unsigned) val % PageSize;
