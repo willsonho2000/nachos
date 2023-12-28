@@ -203,6 +203,8 @@ AddrSpace::Load(char *fileName)
         }
     }
 
+    // Save the 
+
     delete executable;			// close file
     return TRUE;			// success
 }
@@ -294,4 +296,5 @@ void AddrSpace::RestoreState()
 {
     kernel->machine->pageTable = pageTable;
     kernel->machine->pageTableSize = numPages;
+    cout << pageTable << "\n";
 }
