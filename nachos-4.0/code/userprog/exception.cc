@@ -76,7 +76,7 @@ ExceptionHandler(ExceptionType which)
 		buffer2 = new char[PageSize];
 
 		// Random
-		victim = ( rand() % PageSize );
+		victim = ( rand() % NumPhysPages );
 
 		// perform page replacement, write victim frame to disk, read desired frame to memory
 		/// take the value of victim out
@@ -91,7 +91,7 @@ ExceptionHandler(ExceptionType which)
 		pageTable[AddrSpace::RevePhyPages[victim]].virtualPage = pageTable[vpn].virtualPage;
 
 		pageTable[vpn].valid = true;
-		pageTable[vpn].physicalPage=victim;
+		pageTable[vpn].physicalPage = victim;
 		
 		AddrSpace::RevePhyPages[victim] = vpn;
 
