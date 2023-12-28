@@ -114,7 +114,7 @@ AddrSpace::Load(char *fileName)
     size = noffH.code.size + noffH.initData.size + noffH.uninitData.size 
 			+ UserStackSize;	// we need to increase the size
 						// to leave room for the stack
-    numPages = divRoundUp(size, PageSize) + 1;
+    numPages = divRoundUp(size, PageSize);
 //	cout << "number of pages of " << fileName<< " is "<<numPages<<endl;
     size = numPages * PageSize;
     DEBUG(dbgAddr, "Size of each: ");
@@ -132,9 +132,9 @@ AddrSpace::Load(char *fileName)
     cout << "Total Size: " << size << endl;
     
     // swap management
-    UsedSwapPages = new bool[numPages - NumPhysPages];
+    UsedSwapPages = new bool[numPages*2 - NumPhysPages];
     // set a virtual pagetable
-    pageTable = new TranslationEntry[numPages];
+    pageTable = new TranslationEntry[numPages*2];
     for (unsigned int i = 0, j = 0; i < numPages; i++) {
         j = 0;  // j starts from 0
         // if j > the size of the phys page, load to swap
