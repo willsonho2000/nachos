@@ -281,6 +281,7 @@ AddrSpace::InitRegisters()
 
 void AddrSpace::SaveState() 
 {
+    cout << "Run SaveState\n";
     // if ( page_is_load ) {
         pageTable=kernel->machine->pageTable;
         numPages=kernel->machine->pageTableSize;
