@@ -159,6 +159,7 @@ Scheduler::Run (Thread *nextThread, bool finishing)
     
 #ifdef USER_PROGRAM			// ignore until running user programs 
     if (oldThread->space != NULL) {	// if this thread is a user program,
+        DEBUG(dbgThread, "Run SaveState()");
         oldThread->SaveUserState(); 	// save the user's CPU registers
 	oldThread->space->SaveState();
     }
@@ -192,9 +193,8 @@ Scheduler::Run (Thread *nextThread, bool finishing)
     
 #ifdef USER_PROGRAM
     if (oldThread->space != NULL) {	    // if there is an address space
-        cout << "Run RestoreUserState()\n";
+        DEBUG(dbgThread, "Run RestoreState()");
         oldThread->RestoreUserState();     // to restore, do it.
-    cout << "Run RestoreState()\n";
 	oldThread->space->RestoreState();
     }
 #endif
