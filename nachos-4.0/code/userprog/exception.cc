@@ -70,6 +70,7 @@ ExceptionHandler(ExceptionType which)
             kernel->machine->pageTable[vpn].physicalPage = j;
             AddrSpace::UsedPhyPages[j] = true;
             AddrSpace::RevePhyPages[j] = vpn;
+			AddrSpace::Counter[j]++;
             kernel->machine->pageTable[vpn].valid = true;
 
 			char *buffer2;
@@ -88,7 +89,15 @@ ExceptionHandler(ExceptionType which)
 			buffer2 = new char[PageSize];
 
 			// Random
-			victim = ( rand() % NumPhysPages );
+			// victim = ( rand() % NumPhysPages );
+
+			// FIFO
+			victim = 0;
+			int v_count = 0;
+			for ( unsigned i = 0; i < NumPhysPages; i++ ) {
+				if ( AddrSpace::Counter[i] > v_count ) { victim = i; }
+				else {break;}
+			}
 
 			// perform page replacement, write victim frame to disk, read desired frame to memory
 			/// take out the value of victim
@@ -106,6 +115,7 @@ ExceptionHandler(ExceptionType which)
 			kernel->machine->pageTable[vpn].physicalPage = victim;
 			
 			AddrSpace::RevePhyPages[victim] = vpn;
+			AddrSpace::Counter[victim]++;
 		}
 		return;
 	}
@@ -138,8 +148,10 @@ ExceptionHandler(ExceptionType which)
 			DEBUG(dbgAddr, "Program exit\n");
 			val=kernel->machine->ReadRegister(4);
 			cout << "return value: " << val << endl;
+			// project 3 add
 			delete kernel->currentThread->space;
 			kernel->currentThread->space = NULL; 	// don't run SaveState()
+
 			kernel->currentThread->Finish();
 			break;
 		default:
