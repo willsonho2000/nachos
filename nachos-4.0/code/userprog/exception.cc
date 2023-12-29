@@ -57,45 +57,61 @@ ExceptionHandler(ExceptionType which)
 	int	val;
 
 	// add for project3
+	// After a thread is finished, the old thread will be deleted -> rewrite memory
 	if ( which ==  PageFaultException ) {
 		kernel->stats->numPageFaults++; // page fault
-		// cout << "Raise PageFaultException \n";
 
-		int victim;		// find the page victim
-		val = kernel->machine->ReadRegister(BadVAddrReg); // The failing virtual address on an exception
+		unsigned int vpn = (unsigned) val / PageSize;
+		unsigned int j = 0;
+		while ( j < NumPhysPages && UsedPhyPages[j] == true ) {j++;}
 
-		DEBUG(dbgAddr, "Bad Virtual Address: " << val);
+		if ( j < NumPhysPages ) {
+			// If found free space in physical memory, write directly as AddrSpace::Load()
+            kernel->machine->pageTable[vpn].physicalPage = j;
+            AddrSpace::UsedPhyPages[j] = true;
+            AddrSpace::RevePhyPages[j] = vpn;
+            kernel->machine->pageTable[vpn].valid = true;
 
-		int vpn = (unsigned) val / PageSize;
-    	int offset = (unsigned) val % PageSize;
+			char *buffer2;
+			buffer2 = new char[PageSize];
+			kernel->synchDisk->ReadSector( kernel->machine->pageTable[vpn].virtualPage, buffer2 );	
+			bcopy( buffer2, &kernel->machine->mainMemory[victim*PageSize], PageSize );
+			AddrSpace::UsedVirPages[kernel->machine->pageTable[vpn].virtualPage] = false;
+		}
+		else {
+			int victim;		// find the page victim
+			val = kernel->machine->ReadRegister(BadVAddrReg); // The failing virtual address on an exception
 
-		char *buffer1;
-		char *buffer2;
-		buffer1 = new char[PageSize];
-		buffer2 = new char[PageSize];
+			DEBUG(dbgAddr, "Bad Virtual Address: " << val);
 
-		// Random
-		victim = ( rand() % NumPhysPages );
+			char *buffer1;
+			char *buffer2;
+			buffer1 = new char[PageSize];
+			buffer2 = new char[PageSize];
 
-		// perform page replacement, write victim frame to disk, read desired frame to memory
-		/// take out the value of victim
-		// cout << "Here is fine\n";
-		bcopy( &kernel->machine->mainMemory[victim*PageSize], buffer1, PageSize );
-		kernel->synchDisk->ReadSector( kernel->machine->pageTable[vpn].virtualPage, buffer2 );	
-		/// write the value into memory
-		bcopy( buffer2, &kernel->machine->mainMemory[victim*PageSize], PageSize );		
-		kernel->synchDisk->WriteSector( kernel->machine->pageTable[vpn].virtualPage, buffer1 );	// write the swap
+			// Random
+			victim = ( rand() % NumPhysPages );
 
-		// update page status
-		kernel->machine->pageTable[AddrSpace::RevePhyPages[victim]].valid = false;
-		kernel->machine->pageTable[AddrSpace::RevePhyPages[victim]].virtualPage = kernel->machine->pageTable[vpn].virtualPage;
+			// perform page replacement, write victim frame to disk, read desired frame to memory
+			/// take out the value of victim
+			// cout << "Here is fine\n";
+			bcopy( &kernel->machine->mainMemory[victim*PageSize], buffer1, PageSize );
+			kernel->synchDisk->ReadSector( kernel->machine->pageTable[vpn].virtualPage, buffer2 );	
+			/// write the value into memory
+			bcopy( buffer2, &kernel->machine->mainMemory[victim*PageSize], PageSize );		
+			kernel->synchDisk->WriteSector( kernel->machine->pageTable[vpn].virtualPage, buffer1 );	// write the swap
 
-		kernel->machine->pageTable[vpn].valid = true;
-		kernel->machine->pageTable[vpn].physicalPage = victim;
-		
-		AddrSpace::RevePhyPages[victim] = vpn;
+			// update page status
+			kernel->machine->pageTable[AddrSpace::RevePhyPages[victim]].valid = false;
+			kernel->machine->pageTable[AddrSpace::RevePhyPages[victim]].virtualPage = kernel->machine->pageTable[vpn].virtualPage;
 
-		return;
+			kernel->machine->pageTable[vpn].valid = true;
+			kernel->machine->pageTable[vpn].physicalPage = victim;
+			
+			AddrSpace::RevePhyPages[victim] = vpn;
+
+			return;
+		}
 	}
 	
 

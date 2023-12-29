@@ -83,11 +83,11 @@ AddrSpace::~AddrSpace()
     // Check when will run
     cout << "Run ~AddrSpace()\n";
     // Free the occupied space of physical pages
-    // for ( unsigned int i = 0; i < numPages; i++ ) {
-    //     if ( pageTable[i].valid == true ) {
-    //         UsedPhyPages[pageTable[i].physicalPage] = 0;
-    //     }
-    // }
+    for ( unsigned int i = 0; i < numPages; i++ ) {
+        if ( pageTable[i].valid == true ) {
+            UsedPhyPages[pageTable[i].physicalPage] = 0;
+        }
+    }
     delete pageTable;
 }
 
@@ -124,7 +124,7 @@ AddrSpace::Load(char *fileName)
 			+ UserStackSize;	// we need to increase the size
 						// to leave room for the stack
     numPages = divRoundUp(size, PageSize);
-	cout << "number of pages of " << fileName << " is "<<numPages<<endl;
+	cout << " Number of pages of " << fileName << " is "<<numPages<<endl;
     size = numPages * PageSize;
     DEBUG(dbgAddr, "Size of each: ");
     DEBUG(dbgAddr, " code: " << noffH.code.size << ", ");
@@ -202,8 +202,6 @@ AddrSpace::Load(char *fileName)
         }
     }
 
-    // Save the 
-
     delete executable;			// close file
     return TRUE;			// success
 }
@@ -219,7 +217,6 @@ AddrSpace::Load(char *fileName)
 void 
 AddrSpace::Execute(char *fileName) 
 {
-    page_is_load = false;
     if (!Load(fileName)) {
 	cout << "inside !Load(FileName)" << endl;
 	return;				// executable not found
@@ -228,7 +225,6 @@ AddrSpace::Execute(char *fileName)
     //kernel->currentThread->space = this;
     this->InitRegisters();		// set the initial register values
     this->RestoreState();		// load page table register
-    page_is_load = true;
 
     kernel->machine->Run();		// jump to the user progam
 
@@ -281,10 +277,8 @@ AddrSpace::InitRegisters()
 
 void AddrSpace::SaveState() 
 {
-    // if ( page_is_load ) {
-        pageTable=kernel->machine->pageTable;
-        numPages=kernel->machine->pageTableSize;
-    // }
+    pageTable=kernel->machine->pageTable;
+    numPages=kernel->machine->pageTableSize;
 }
 
 //----------------------------------------------------------------------
