@@ -106,7 +106,7 @@ ExceptionHandler(ExceptionType which)
 			victim = 0;
 			// Find the least counter number
 			int v_count = 999999;
-			for ( unsigned i = 1; i < NumPhysPages; i++ ) {
+			for ( unsigned i = 0; i < NumPhysPages; i++ ) {
 				if ( AddrSpace::Counter[i] < v_count ) { 
 					v_count = AddrSpace::Counter[i];
 				}
@@ -114,15 +114,17 @@ ExceptionHandler(ExceptionType which)
 			// Search all physical number with the least used
 			List <unsigned int> least_list;
 			int count = 0;
-			for ( unsigned i = 1; i < NumPhysPages; i++ ) {
+			for ( unsigned i = 0; i < NumPhysPages; i++ ) {
 				if ( AddrSpace::Counter[i] == v_count ) { 
 					count++;
 					least_list.Append( i );
 				}
 			}
 			// randomly choose a number
-			for ( int i = 0; i < rand()%count; i++) { least_list.RemoveFront(); }
 			victim = least_list.Front();
+			int i;
+			for ( i = 0; i < rand()%count; i++ ) { victim = least_list.RemoveFront(); }
+			least_list.Remove( count - i );	// clear the list
 
 			// perform page replacement, write victim frame to disk, read desired frame to memory
 			/// take out the value of victim
