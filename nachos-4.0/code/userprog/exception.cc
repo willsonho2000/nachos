@@ -79,7 +79,7 @@ ExceptionHandler(ExceptionType which)
 
 		// perform page replacement, write victim frame to disk, read desired frame to memory
 		/// take out the value of victim
-		cout << "Here is fine\n";
+		// cout << "Here is fine\n";
 		bcopy( &kernel->machine->mainMemory[victim*PageSize], buffer1, PageSize );
 		kernel->synchDisk->ReadSector( kernel->machine->pageTable[vpn].virtualPage, buffer2 );	
 		/// write the value into memory
@@ -127,7 +127,9 @@ ExceptionHandler(ExceptionType which)
 			DEBUG(dbgAddr, "Program exit\n");
 			val=kernel->machine->ReadRegister(4);
 			cout << "return value:" << val << endl;
+			cout << "Here is fine\n";
 			delete kernel->currentThread->space;
+			cout << "Here is fine\n";
 			kernel->currentThread->Finish();
 			break;
 		default:
