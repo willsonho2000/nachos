@@ -116,7 +116,7 @@ AddrSpace::Load(char *fileName)
 			+ UserStackSize;	// we need to increase the size
 						// to leave room for the stack
     numPages = divRoundUp(size, PageSize);
-//	cout << "number of pages of " << fileName<< " is "<<numPages<<endl;
+	cout << "number of pages of " << fileName << " is "<<numPages<<endl;
     size = numPages * PageSize;
     DEBUG(dbgAddr, "Size of each: ");
     DEBUG(dbgAddr, " code: " << noffH.code.size << ", ");
