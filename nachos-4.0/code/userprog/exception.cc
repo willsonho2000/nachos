@@ -125,6 +125,7 @@ ExceptionHandler(ExceptionType which)
 			int i;
 			for ( i = 0; i < rand()%count; i++ ) { victim = least_list.RemoveFront(); }
 			least_list.Remove( count - i );	// clear the list
+			cout << "count: " << count << ", i: " << i << endl;
 
 			// perform page replacement, write victim frame to disk, read desired frame to memory
 			/// take out the value of victim
