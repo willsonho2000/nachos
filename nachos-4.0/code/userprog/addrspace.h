@@ -18,6 +18,7 @@
 #include <string.h>
 
 #define UserStackSize		1024 	// increase this as necessary!
+#define NumVirtPages    NumPhysPages*4
 
 class AddrSpace {
   public:
@@ -30,7 +31,10 @@ class AddrSpace {
     void SaveState();			// Save/restore address space-specific
     void RestoreState();		// info on a context switch 
 
-    static bool UsedPhyPages[NumPhysPages];    // store the occupied physical pages
+    static bool UsedPhyPages[NumPhysPages];     // store the occupied physical pages
+    static bool UsedVirPages[NumVirtPages];     // store the occupied virtual pages
+    static int  RevePhyPages[NumPhysPages];     // store the ind of virtual pages of the occupied physical pages
+    static int  Counter[NumPhysPages];          // store the times a physical memory swaps
 
   private:
     TranslationEntry *pageTable;	// Assume linear page table translation
@@ -40,6 +44,7 @@ class AddrSpace {
 
     bool Load(char *fileName);		// Load the program into memory
 					// return false if not found
+    bool page_is_load;          // check whether the page have been load for initialization
 
     void InitRegisters();		// Initialize user-level CPU registers,
 					// before jumping to user code

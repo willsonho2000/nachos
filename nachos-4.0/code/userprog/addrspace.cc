@@ -43,7 +43,11 @@ SwapHeader (NoffHeader *noffH)
     noffH->uninitData.inFileAddr = WordToHost(noffH->uninitData.inFileAddr);
 }
 
+// project 3 add
 bool AddrSpace::UsedPhyPages[NumPhysPages] = {0};  // initialize the elements
+bool AddrSpace::UsedVirPages[NumVirtPages] = {0};  // initialize the elements
+int  AddrSpace::RevePhyPages[NumPhysPages] = {0};  // initialize the elements
+int  AddrSpace::Counter[NumPhysPages] = {0};
 
 //----------------------------------------------------------------------
 // AddrSpace::AddrSpace
@@ -55,18 +59,17 @@ bool AddrSpace::UsedPhyPages[NumPhysPages] = {0};  // initialize the elements
 
 AddrSpace::AddrSpace()
 {
-    pageTable = new TranslationEntry[NumPhysPages];
-    for (unsigned int i = 0; i < NumPhysPages; i++) {
-        pageTable[i].virtualPage = i;	// for now, virt page # = phys page #
-
-        pageTable[i].physicalPage = i;
-    //	pageTable[i].physicalPage = 0;
-        pageTable[i].valid = TRUE;
-    //	pageTable[i].valid = FALSE;
-        pageTable[i].use = FALSE;
-        pageTable[i].dirty = FALSE;
-        pageTable[i].readOnly = FALSE;  
-    }
+    // pageTable = new TranslationEntry[NumPhysPages];
+    // for (unsigned int i = 0; i < NumPhysPages; i++) {
+    //     pageTable[i].virtualPage = i;	// for now, virt page # = phys page #
+    //     pageTable[i].physicalPage = i;
+    // //	pageTable[i].physicalPage = 0;
+    //     pageTable[i].valid = TRUE;
+    // //	pageTable[i].valid = FALSE;
+    //     pageTable[i].use = FALSE;
+    //     pageTable[i].dirty = FALSE;
+    //     pageTable[i].readOnly = FALSE;  
+    // }
     
     // zero out the entire address space
 //    bzero(kernel->machine->mainMemory, MemorySize);
@@ -79,6 +82,12 @@ AddrSpace::AddrSpace()
 
 AddrSpace::~AddrSpace()
 {
+    // Free the occupied space of physical pages
+    for ( unsigned int i = 0; i < numPages; i++ ) {
+        if ( pageTable[i].valid == true ) {
+            UsedPhyPages[pageTable[i].physicalPage] = 0;
+        }
+    }
     delete pageTable;
 }
 
@@ -115,51 +124,82 @@ AddrSpace::Load(char *fileName)
 			+ UserStackSize;	// we need to increase the size
 						// to leave room for the stack
     numPages = divRoundUp(size, PageSize);
-//	cout << "number of pages of " << fileName<< " is "<<numPages<<endl;
+	cout << " Number of pages of " << fileName << " is "<<numPages<<endl;
     size = numPages * PageSize;
-
-    ASSERT(numPages <= NumPhysPages);		// check we're not trying
+    DEBUG(dbgAddr, "Size of each: ");
+    DEBUG(dbgAddr, " code: " << noffH.code.size << ", ");
+    DEBUG(dbgAddr, " initData: " << noffH.initData.size << ", ");
+    DEBUG(dbgAddr, " uninitData: " << noffH.uninitData.size);
+    //ASSERT(numPages <= NumPhysPages);		// check we're not trying
 						// to run anything too big --
 						// at least until we have
 						// virtual memory
 
     DEBUG(dbgAddr, "Initializing address space: " << numPages << ", " << size);
-    // set a new pagetable
-    pageTable = new TranslationEntry[numPages];
-    for (unsigned int i = 0, j = 0; i < numPages; i++) {
-        pageTable[i].virtualPage = i;   // for now, virt page # != phys page #
+    DEBUG(dbgAddr, "Number of Physical pages: " << NumPhysPages);
 
-        while ( j < NumPhysPages && AddrSpace::UsedPhyPages[j] == true )
-            j++;
-        pageTable[i].physicalPage = j;
-        AddrSpace::UsedPhyPages[j] = true;
-        pageTable[i].valid = TRUE;
+    // set a pagetable
+    pageTable = new TranslationEntry[numPages];
+
+    AddrSpace::RestoreState();
+    for (unsigned int i = 0, j = 0; i < numPages; i++) {
+        j = 0;  // j starts from 0
+        // if j > the size of the phys page, load to swap
+        while ( j < NumPhysPages && UsedPhyPages[j] == true ) {j++;}
+        if ( j < NumPhysPages ) {
+            // assign the same index for virt and phys page
+            pageTable[i].physicalPage = j;
+            UsedPhyPages[j] = true;
+            RevePhyPages[j] = i;
+            pageTable[i].valid = true;
+
+        }
+        else {  // need to use swap
+            unsigned int k = 0;
+            while ( k < NumVirtPages && UsedVirPages[k] == true ) {k++;}
+            pageTable[i].virtualPage = k;
+            UsedVirPages[k] = true;
+            pageTable[i].valid = false; // for swap, it is not valid
+        }
         pageTable[i].use = FALSE;
         pageTable[i].dirty = FALSE;
         pageTable[i].readOnly = FALSE;
     }
 
-//    cout << noffH.code.virtualAddr << "," << noffH.initData.virtualAddr << endl;
-// then, copy in the code and data segments into memory
+    // then, copy in the code and data segments into memory
+    // Modify for project3
+    for (unsigned int i = 0; i < numPages; i++) {
         if (noffH.code.size > 0) {
-        DEBUG(dbgAddr, "Initializing code segment.");
-        DEBUG(dbgAddr, noffH.code.virtualAddr << ", " << noffH.code.size);
-        unsigned int PhysAddr = pageTable[noffH.code.virtualAddr/PageSize].physicalPage*PageSize + noffH.code.virtualAddr%PageSize;
-//      cout << PhysAddr << endl;
-        executable->ReadAt(
-//              &(kernel->machine->mainMemory[noffH.code.virtualAddr]),
-                &(kernel->machine->mainMemory[PhysAddr]),
-                        noffH.code.size, noffH.code.inFileAddr);
-    }
+            // DEBUG(dbgAddr, "Initializing code segment.");
+            // DEBUG(dbgAddr, noffH.code.virtualAddr << ", " << noffH.code.size);
+            // DEBUG(dbgAddr, index*PageSize << ", " << PageSize);
+
+            if ( pageTable[i].valid == true ) {
+                int index = pageTable[i].physicalPage;
+                executable->ReadAt(&(kernel->machine->mainMemory[index*PageSize]), PageSize, noffH.code.inFileAddr+(i*PageSize));
+            }
+            else {
+                char *buffer;
+                buffer = new char[PageSize];
+                int index = pageTable[i].virtualPage;
+                executable->ReadAt(buffer, PageSize, noffH.code.inFileAddr+(i*PageSize));
+                kernel->synchDisk->WriteSector(index, buffer);    // write in swap space
+            }
+            // executable->ReadAt(
+            //     &(kernel->machine->mainMemory[noffH.code.virtualAddr]),
+            //         // &(kernel->machine->mainMemory[PhysAddr]),
+            //                 noffH.code.size, noffH.code.inFileAddr);
+        }
+        // The below part seens to be unused in project3, could ignored
         if (noffH.initData.size > 0) {
-        DEBUG(dbgAddr, "Initializing data segment.");
-        DEBUG(dbgAddr, noffH.initData.virtualAddr << ", " << noffH.initData.size);
-        unsigned int PhysAddr = pageTable[noffH.initData.virtualAddr/PageSize].physicalPage*PageSize + noffH.initData.virtualAddr%PageSize;
-//      cout << PhysAddr << endl;
-        executable->ReadAt(
-//              &(kernel->machine->mainMemory[noffH.initData.virtualAddr]),
-                &(kernel->machine->mainMemory[PhysAddr]),
-                        noffH.initData.size, noffH.initData.inFileAddr);
+            DEBUG(dbgAddr, "Initializing data segment.");
+            DEBUG(dbgAddr, noffH.initData.virtualAddr << ", " << noffH.initData.size);
+            // unsigned int PhysAddr = pageTable[noffH.initData.virtualAddr/PageSize].physicalPage*PageSize + noffH.initData.virtualAddr%PageSize;
+            executable->ReadAt(
+                &(kernel->machine->mainMemory[noffH.initData.virtualAddr]),
+                    // &(kernel->machine->mainMemory[PhysAddr]),
+                            noffH.initData.size, noffH.initData.inFileAddr);
+        }
     }
 
     delete executable;			// close file
@@ -237,8 +277,8 @@ AddrSpace::InitRegisters()
 
 void AddrSpace::SaveState() 
 {
-        pageTable=kernel->machine->pageTable;
-        numPages=kernel->machine->pageTableSize;
+    pageTable=kernel->machine->pageTable;
+    numPages=kernel->machine->pageTableSize;
 }
 
 //----------------------------------------------------------------------

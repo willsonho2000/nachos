@@ -24,6 +24,9 @@
 #include "copyright.h"
 #include "main.h"
 #include "syscall.h"
+#include "machine.h"
+#include "addrspace.h"
+#include "list.h"
 
 //----------------------------------------------------------------------
 // ExceptionHandler
@@ -54,6 +57,97 @@ ExceptionHandler(ExceptionType which)
 	int	type = kernel->machine->ReadRegister(2);
 	int	val;
 
+	// add for project3
+	// After a thread is finished, the old thread will be deleted -> rewrite memory
+	if ( which ==  PageFaultException ) {
+		kernel->stats->numPageFaults++; // page fault
+		val = kernel->machine->ReadRegister(BadVAddrReg); // The failing virtual address on an exception
+		int vpn = val / PageSize;
+
+		unsigned int j = 0;
+		while ( j < NumPhysPages && AddrSpace::UsedPhyPages[j] == true ) {j++;}
+		if ( j < NumPhysPages ) {
+			// If found free space in physical memory, write directly as AddrSpace::Load()
+            kernel->machine->pageTable[vpn].physicalPage = j;
+            AddrSpace::UsedPhyPages[j] = true;
+            AddrSpace::RevePhyPages[j] = vpn;
+			AddrSpace::Counter[j]++;
+            kernel->machine->pageTable[vpn].valid = true;
+
+			char *buffer2;
+			buffer2 = new char[PageSize];
+			kernel->synchDisk->ReadSector( kernel->machine->pageTable[vpn].virtualPage, buffer2 );	
+			bcopy( buffer2, &kernel->machine->mainMemory[j*PageSize], PageSize );
+			AddrSpace::UsedVirPages[kernel->machine->pageTable[vpn].virtualPage] = false;
+		}
+		else {
+			int victim;		// find the page victim
+			DEBUG(dbgAddr, "Bad Virtual Address: " << val);
+
+			char *buffer1;
+			char *buffer2;
+			buffer1 = new char[PageSize];
+			buffer2 = new char[PageSize];
+
+			// // Random
+			// victim = ( rand() % NumPhysPages );
+
+			// // FIFO
+			// victim = 0;
+			// int v_count = AddrSpace::Counter[0];
+			// for ( unsigned i = 1; i < NumPhysPages; i++ ) {
+			// 	if ( AddrSpace::Counter[i] < v_count ) { 
+			// 		victim = i;
+			// 		break;
+			// 	}
+			// }
+
+			// LSU
+			victim = 0;
+			// Find the least counter number
+			int v_count = 999999;
+			for ( unsigned i = 0; i < NumPhysPages; i++ ) {
+				if ( AddrSpace::Counter[i] < v_count ) { 
+					v_count = AddrSpace::Counter[i];
+				}
+			}
+			// Search all physical number with the least used
+			List <unsigned int> least_list;
+			int count = 0;
+			for ( unsigned i = 0; i < NumPhysPages; i++ ) {
+				if ( AddrSpace::Counter[i] == v_count ) { 
+					count++;
+					least_list.Append( i );
+				}
+			}
+			// randomly choose a number
+			int num = rand() % count;
+			for ( int i = 0; i < count; i++ ) {
+				int tmp = least_list.RemoveFront(); 
+				if ( num == i ) { victim = tmp; }
+			}
+
+			// perform page replacement, write victim frame to disk, read desired frame to memory
+			/// take out the value of victim
+			bcopy( &kernel->machine->mainMemory[victim*PageSize], buffer1, PageSize );
+			kernel->synchDisk->ReadSector( kernel->machine->pageTable[vpn].virtualPage, buffer2 );	
+			/// write the value into memory
+			bcopy( buffer2, &kernel->machine->mainMemory[victim*PageSize], PageSize );		
+			kernel->synchDisk->WriteSector( kernel->machine->pageTable[vpn].virtualPage, buffer1 );	// write the swap
+
+			// update page status
+			kernel->machine->pageTable[AddrSpace::RevePhyPages[victim]].valid = false;
+			kernel->machine->pageTable[AddrSpace::RevePhyPages[victim]].virtualPage = kernel->machine->pageTable[vpn].virtualPage;
+
+			kernel->machine->pageTable[vpn].valid = true;
+			kernel->machine->pageTable[vpn].physicalPage = victim;
+			
+			AddrSpace::RevePhyPages[victim] = vpn;
+			AddrSpace::Counter[victim]++;
+		}
+		return;
+	}
+
     switch (which) {
 	case SyscallException:
 	    switch(type) {
@@ -81,7 +175,11 @@ ExceptionHandler(ExceptionType which)
 */		case SC_Exit:
 			DEBUG(dbgAddr, "Program exit\n");
 			val=kernel->machine->ReadRegister(4);
-			cout << "return value:" << val << endl;
+			cout << "return value: " << val << endl;
+			// project 3 add
+			delete kernel->currentThread->space;
+			kernel->currentThread->space = NULL; 	// don't run SaveState()
+
 			kernel->currentThread->Finish();
 			break;
 		default:
@@ -89,8 +187,13 @@ ExceptionHandler(ExceptionType which)
  		    break;
 	    }
 	    break;
+	case AddressErrorException:
+		cout << "Raise AddressErrorException \n";
+		val = kernel->machine->ReadRegister(BadVAddrReg);
+		cout << "Bad Virtual Address: " << val;
+		break;
 	default:
-	    cerr << "Unexpected user mode exception" << which << "\n";
+	    cerr << "Unexpected user mode exception " << which << "\n";
 	    break;
     }
     ASSERTNOTREACHED();
