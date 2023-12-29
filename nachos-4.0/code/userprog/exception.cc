@@ -63,7 +63,7 @@ ExceptionHandler(ExceptionType which)
 
 		unsigned int vpn = (unsigned) val / PageSize;
 		unsigned int j = 0;
-		while ( j < NumPhysPages && UsedPhyPages[j] == true ) {j++;}
+		while ( j < NumPhysPages && AddrSpace::UsedPhyPages[j] == true ) {j++;}
 
 		if ( j < NumPhysPages ) {
 			// If found free space in physical memory, write directly as AddrSpace::Load()
@@ -75,7 +75,7 @@ ExceptionHandler(ExceptionType which)
 			char *buffer2;
 			buffer2 = new char[PageSize];
 			kernel->synchDisk->ReadSector( kernel->machine->pageTable[vpn].virtualPage, buffer2 );	
-			bcopy( buffer2, &kernel->machine->mainMemory[victim*PageSize], PageSize );
+			bcopy( buffer2, &kernel->machine->mainMemory[j*PageSize], PageSize );
 			AddrSpace::UsedVirPages[kernel->machine->pageTable[vpn].virtualPage] = false;
 		}
 		else {
