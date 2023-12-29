@@ -142,6 +142,7 @@ ExceptionHandler(ExceptionType which)
 			DEBUG(dbgAddr, "Program exit\n");
 			val=kernel->machine->ReadRegister(4);
 			cout << "return value: " << val << endl;
+			delete kernel->currentThread->space;
 			kernel->currentThread->space = NULL; 	// don't run SaveState()
 			kernel->currentThread->Finish();
 			break;
