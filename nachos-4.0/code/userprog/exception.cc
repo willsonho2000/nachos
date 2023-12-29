@@ -66,20 +66,16 @@ ExceptionHandler(ExceptionType which)
 		unsigned int j = 0;
 		while ( j < NumPhysPages && AddrSpace::UsedPhyPages[j] == true ) {j++;}
 		if ( j < NumPhysPages ) {
-			cout << "j: " << j << "\n";
 			// If found free space in physical memory, write directly as AddrSpace::Load()
             kernel->machine->pageTable[vpn].physicalPage = j;
             AddrSpace::UsedPhyPages[j] = true;
             AddrSpace::RevePhyPages[j] = vpn;
             kernel->machine->pageTable[vpn].valid = true;
-			cout << "Good\n";
 
 			char *buffer2;
 			buffer2 = new char[PageSize];
 			kernel->synchDisk->ReadSector( kernel->machine->pageTable[vpn].virtualPage, buffer2 );	
-			cout << "Good\n";
 			bcopy( buffer2, &kernel->machine->mainMemory[j*PageSize], PageSize );
-			cout << "Good\n";
 			AddrSpace::UsedVirPages[kernel->machine->pageTable[vpn].virtualPage] = false;
 		}
 		else {
@@ -111,9 +107,8 @@ ExceptionHandler(ExceptionType which)
 			kernel->machine->pageTable[vpn].physicalPage = victim;
 			
 			AddrSpace::RevePhyPages[victim] = vpn;
-
-			return;
 		}
+		return;
 	}
 	
 
