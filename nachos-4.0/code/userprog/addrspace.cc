@@ -80,8 +80,6 @@ AddrSpace::AddrSpace()
 
 AddrSpace::~AddrSpace()
 {
-    // Check when will run
-    cout << "Run ~AddrSpace()\n";
     // Free the occupied space of physical pages
     for ( unsigned int i = 0; i < numPages; i++ ) {
         if ( pageTable[i].valid == true ) {

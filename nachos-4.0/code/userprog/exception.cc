@@ -62,10 +62,11 @@ ExceptionHandler(ExceptionType which)
 		kernel->stats->numPageFaults++; // page fault
 		val = kernel->machine->ReadRegister(BadVAddrReg); // The failing virtual address on an exception
 		int vpn = val / PageSize;
-		
+
 		unsigned int j = 0;
 		while ( j < NumPhysPages && AddrSpace::UsedPhyPages[j] == true ) {j++;}
 		if ( j < NumPhysPages ) {
+			cout << "j: " << j << "\n";
 			// If found free space in physical memory, write directly as AddrSpace::Load()
             kernel->machine->pageTable[vpn].physicalPage = j;
             AddrSpace::UsedPhyPages[j] = true;
