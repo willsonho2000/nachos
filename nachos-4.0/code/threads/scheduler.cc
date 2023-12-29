@@ -191,8 +191,8 @@ Scheduler::Run (Thread *nextThread, bool finishing)
 					// and needs to be cleaned up
     
 #ifdef USER_PROGRAM
-    cout << "Run RestoreUserState()\n";
     if (oldThread->space != NULL) {	    // if there is an address space
+        cout << "Run RestoreUserState()\n";
         oldThread->RestoreUserState();     // to restore, do it.
     cout << "Run RestoreState()\n";
 	oldThread->space->RestoreState();
