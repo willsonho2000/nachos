@@ -61,10 +61,10 @@ ExceptionHandler(ExceptionType which)
 	if ( which ==  PageFaultException ) {
 		kernel->stats->numPageFaults++; // page fault
 
-		unsigned int vpn = (unsigned) val / PageSize;
+		int vpn = (unsigned) val / PageSize;
 		unsigned int j = 0;
 		while ( j < NumPhysPages && AddrSpace::UsedPhyPages[j] == true ) {j++;}
-
+		cout << "j: " << j << "\n";
 		if ( j < NumPhysPages ) {
 			// If found free space in physical memory, write directly as AddrSpace::Load()
             kernel->machine->pageTable[vpn].physicalPage = j;
