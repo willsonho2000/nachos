@@ -60,11 +60,11 @@ ExceptionHandler(ExceptionType which)
 	// After a thread is finished, the old thread will be deleted -> rewrite memory
 	if ( which ==  PageFaultException ) {
 		kernel->stats->numPageFaults++; // page fault
-
-		int vpn = (unsigned) val / PageSize;
+		val = kernel->machine->ReadRegister(BadVAddrReg); // The failing virtual address on an exception
+		int vpn = val / PageSize;
+		
 		unsigned int j = 0;
 		while ( j < NumPhysPages && AddrSpace::UsedPhyPages[j] == true ) {j++;}
-		cout << "j: " << j << "\n";
 		if ( j < NumPhysPages ) {
 			// If found free space in physical memory, write directly as AddrSpace::Load()
             kernel->machine->pageTable[vpn].physicalPage = j;
@@ -80,8 +80,6 @@ ExceptionHandler(ExceptionType which)
 		}
 		else {
 			int victim;		// find the page victim
-			val = kernel->machine->ReadRegister(BadVAddrReg); // The failing virtual address on an exception
-
 			DEBUG(dbgAddr, "Bad Virtual Address: " << val);
 
 			char *buffer1;
