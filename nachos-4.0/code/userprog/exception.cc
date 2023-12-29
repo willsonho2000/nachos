@@ -121,7 +121,7 @@ ExceptionHandler(ExceptionType which)
 				}
 			}
 			// randomly choose a number
-			victim = least_list[ rand() % i ];
+			victim = least_list[ rand() % count ];
 
 			// perform page replacement, write victim frame to disk, read desired frame to memory
 			/// take out the value of victim
