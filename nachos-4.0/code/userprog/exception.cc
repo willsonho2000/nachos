@@ -26,6 +26,7 @@
 #include "syscall.h"
 #include "machine.h"
 #include "addrspace.h"
+#include "list.h"
 
 //----------------------------------------------------------------------
 // ExceptionHandler
@@ -88,20 +89,39 @@ ExceptionHandler(ExceptionType which)
 			buffer1 = new char[PageSize];
 			buffer2 = new char[PageSize];
 
-			// Random
+			// // Random
 			// victim = ( rand() % NumPhysPages );
 
-			// FIFO
-			victim = 0;
-			int v_count = AddrSpace::Counter[0];
-			for ( unsigned i = 1; i < NumPhysPages; i++ ) {
-				if ( AddrSpace::Counter[i] < v_count ) { 
-					victim = i;
-					break;
-				}
-			}
+			// // FIFO
+			// victim = 0;
+			// int v_count = AddrSpace::Counter[0];
+			// for ( unsigned i = 1; i < NumPhysPages; i++ ) {
+			// 	if ( AddrSpace::Counter[i] < v_count ) { 
+			// 		victim = i;
+			// 		break;
+			// 	}
+			// }
 
 			// LSU
+			victim = 0;
+			// Find the least counter number
+			int v_count = UINT_MAX;
+			for ( unsigned i = 1; i < NumPhysPages; i++ ) {
+				if ( AddrSpace::Counter[i] < v_count ) { 
+					v_count = AddrSpace::Counter[i];
+				}
+			}
+			// Search all physical number with the least used
+			List <int *> least_list;
+			int count = 0;
+			for ( unsigned i = 1; i < NumPhysPages; i++ ) {
+				if ( AddrSpace::Counter[i] == v_count ) { 
+					count++;
+					least_list.push_back( i );
+				}
+			}
+			// randomly choose a number
+			victim = least_list[ rand() % i ];
 
 			// perform page replacement, write victim frame to disk, read desired frame to memory
 			/// take out the value of victim
