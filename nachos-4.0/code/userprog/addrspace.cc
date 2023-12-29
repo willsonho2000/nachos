@@ -155,7 +155,7 @@ AddrSpace::Load(char *fileName)
 
         }
         else {  // need to use swap
-            int k = 0;
+            unsigned int k = 0;
             while ( k < NumVirtPages && UsedVirPages[k] == true ) {k++;}
             pageTable[i].virtualPage = k;
             UsedVirPages[k] = true;
@@ -281,7 +281,6 @@ AddrSpace::InitRegisters()
 
 void AddrSpace::SaveState() 
 {
-    cout << "Run SaveState\n";
     // if ( page_is_load ) {
         pageTable=kernel->machine->pageTable;
         numPages=kernel->machine->pageTableSize;
