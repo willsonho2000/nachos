@@ -72,11 +72,14 @@ ExceptionHandler(ExceptionType which)
             AddrSpace::UsedPhyPages[j] = true;
             AddrSpace::RevePhyPages[j] = vpn;
             kernel->machine->pageTable[vpn].valid = true;
+			cout << "Good\n";
 
 			char *buffer2;
 			buffer2 = new char[PageSize];
 			kernel->synchDisk->ReadSector( kernel->machine->pageTable[vpn].virtualPage, buffer2 );	
+			cout << "Good\n";
 			bcopy( buffer2, &kernel->machine->mainMemory[j*PageSize], PageSize );
+			cout << "Good\n";
 			AddrSpace::UsedVirPages[kernel->machine->pageTable[vpn].virtualPage] = false;
 		}
 		else {
@@ -153,6 +156,8 @@ ExceptionHandler(ExceptionType which)
 	    break;
 	case AddressErrorException:
 		cout << "Raise AddressErrorException \n";
+		val = kernel->machine->ReadRegister(BadVAddrReg);
+		cout << "Bad Virtual Address: " << val;
 		break;
 	default:
 	    cerr << "Unexpected user mode exception " << which << "\n";
