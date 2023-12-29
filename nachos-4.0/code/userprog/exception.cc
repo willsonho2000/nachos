@@ -126,8 +126,6 @@ ExceptionHandler(ExceptionType which)
 				int tmp = least_list.RemoveFront(); 
 				if ( num == i ) { victim = tmp; }
 			}
-			// cout << "count: " << count << ", i: " << i << endl;
-			// cout << least_list.NumInList() << endl;
 
 			// perform page replacement, write victim frame to disk, read desired frame to memory
 			/// take out the value of victim
