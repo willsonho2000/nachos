@@ -105,19 +105,19 @@ ExceptionHandler(ExceptionType which)
 			// LSU
 			victim = 0;
 			// Find the least counter number
-			int v_count = UINT_MAX;
+			int v_count = 999999;
 			for ( unsigned i = 1; i < NumPhysPages; i++ ) {
 				if ( AddrSpace::Counter[i] < v_count ) { 
 					v_count = AddrSpace::Counter[i];
 				}
 			}
 			// Search all physical number with the least used
-			List <int *> least_list;
+			List <unsigned int> least_list;
 			int count = 0;
 			for ( unsigned i = 1; i < NumPhysPages; i++ ) {
 				if ( AddrSpace::Counter[i] == v_count ) { 
 					count++;
-					least_list.push_back( i );
+					least_list.Append( i );
 				}
 			}
 			// randomly choose a number
