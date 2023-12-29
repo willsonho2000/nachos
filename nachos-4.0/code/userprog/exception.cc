@@ -121,7 +121,8 @@ ExceptionHandler(ExceptionType which)
 				}
 			}
 			// randomly choose a number
-			victim = least_list[ rand() % count ];
+			for ( int i = 0; i < rand()%count; i++) { least_list.RemoveFront(); }
+			victim = least_list.Front();
 
 			// perform page replacement, write victim frame to disk, read desired frame to memory
 			/// take out the value of victim
