@@ -127,9 +127,7 @@ ExceptionHandler(ExceptionType which)
 			DEBUG(dbgAddr, "Program exit\n");
 			val=kernel->machine->ReadRegister(4);
 			cout << "return value: " << val << endl;
-			cout << "Here is fine\n";
 			// delete kernel->currentThread->space;
-			cout << "Here is fine\n";
 			kernel->currentThread->Finish();
 			break;
 		default:
