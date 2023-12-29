@@ -93,13 +93,9 @@ ExceptionHandler(ExceptionType which)
 
 			// FIFO
 			victim = 0;
-			int v_count = 0;
-			for ( unsigned i = 0; i < NumPhysPages; i++ ) {
-				if ( AddrSpace::Counter[i] >= v_count ) { 
-					victim = i;
-					v_count = AddrSpace::Counter[i];
-				}
-				else {
+			int v_count = AddrSpace::Counter[0];
+			for ( unsigned i = 1; i < NumPhysPages; i++ ) {
+				if ( AddrSpace::Counter[i] < v_count ) { 
 					victim = i;
 					break;
 				}
