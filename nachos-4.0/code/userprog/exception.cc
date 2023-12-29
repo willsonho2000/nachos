@@ -121,12 +121,13 @@ ExceptionHandler(ExceptionType which)
 				}
 			}
 			// randomly choose a number
-			victim = least_list.Front();
-			int i;
-			for ( i = 0; i < rand()%count; i++ ) { victim = least_list.RemoveFront(); }
-			least_list.Remove( count - i );	// clear the list
-			cout << "count: " << count << ", i: " << i << endl;
-			cout << least_list.NumInList() << endl;
+			int num = rand() % count;
+			for ( int i = 0; i < count; i++ ) {
+				int tmp = least_list.RemoveFront(); 
+				if ( num == i ) { victim = tmp; }
+			}
+			// cout << "count: " << count << ", i: " << i << endl;
+			// cout << least_list.NumInList() << endl;
 
 			// perform page replacement, write victim frame to disk, read desired frame to memory
 			/// take out the value of victim
