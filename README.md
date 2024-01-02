@@ -35,23 +35,30 @@ make
 ```
 cd ../userprog
 user@user-VirtualBox:~/nachos/nachos-4.0/code/userprog$ ./nachos -e ../test/test1 -e ../test/test2
-Total threads number is 1
+
+Total threads number is 2
 Thread ../test/test1 is executing.
+Thread ../test/test2 is executing.
 Print integer:9
 Print integer:8
 Print integer:7
+Print integer:20
+Print integer:21
+Print integer:22
+Print integer:23
+Print integer:24
 Print integer:6
+return value:0
+Print integer:25
 return value:0
 No threads ready or runnable, and no pending interrupts.
 Assuming the program completed.
 Machine halting!
 
-Ticks: total 200, idle 66, system 40, user 94
+Ticks: total 300, idle 8, system 70, user 222
 Disk I/O: reads 0, writes 0
 Console I/O: reads 0, writes 0
 Paging: faults 0
 Network I/O: packets received 0, sent 0
 ```
-
-
 Check out r11222007_project1.pdf for details.
