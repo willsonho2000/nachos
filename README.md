@@ -34,21 +34,37 @@ make
 ## Check if you are success
 ```
 cd ../userprog
-user@user-VirtualBox:~/nachos/nachos-4.0/code/userprog$ ./nachos -e ../test/test1
-Total threads number is 1
-Thread ../test/test1 is executing.
-Print integer:9
-Print integer:8
-Print integer:7
-Print integer:6
-return value:0
+user@user-VirtualBox:~/nachos/project3-part2/nachos-4.0/code/threads$ ./nachos 
+A: remaining 2
+A: remaining 1
+A: remaining 0
+C: remaining 6
+C: remaining 5
+C: remaining 4
+C: remaining 3
+C: remaining 2
+C: remaining 1
+C: remaining 0
+B: remaining 8
+B: remaining 7
+B: remaining 6
+B: remaining 5
+B: remaining 4
+B: remaining 3
+B: remaining 2
+B: remaining 1
+D: remaining 2
+D: remaining 1
+D: remaining 0
+B: remaining 0
 No threads ready or runnable, and no pending interrupts.
 Assuming the program completed.
 Machine halting!
 
-Ticks: total 200, idle 66, system 40, user 94
+Ticks: total 400, idle 60, system 340, user 0
 Disk I/O: reads 0, writes 0
 Console I/O: reads 0, writes 0
 Paging: faults 0
 Network I/O: packets received 0, sent 0
+
 ```
