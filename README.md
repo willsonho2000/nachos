@@ -31,24 +31,75 @@ cd nachos-4.0/code
 make
 ```
 
-## Check if you are success
+## Executions
+
+* Random
 ```
 cd ../userprog
-user@user-VirtualBox:~/nachos/nachos-4.0/code/userprog$ ./nachos -e ../test/test1
-Total threads number is 1
-Thread ../test/test1 is executing.
-Print integer:9
-Print integer:8
-Print integer:7
-Print integer:6
-return value:0
+user@user-VirtualBox:~/nachos/nachos-4.0/code/userprog$ ./nachos -e ../test/matmult -e ../test/sort
+Schedule Type: RR
+Total threads number is 2
+Thread ../test/matmult is executing.
+Thread ../test/sort is executing.
+ Number of pages of ../test/matmult is 54
+ Number of pages of ../test/sort is 46
+return value: 7220
+return value: 1023
 No threads ready or runnable, and no pending interrupts.
 Assuming the program completed.
 Machine halting!
 
-Ticks: total 200, idle 66, system 40, user 94
-Disk I/O: reads 0, writes 0
+Ticks: total 33436022, idle 15697721, system 53630, user 17684671
+Disk I/O: reads 875, writes 911
 Console I/O: reads 0, writes 0
-Paging: faults 0
+Paging: faults 875
 Network I/O: packets received 0, sent 0
 ```
+
+* Fisrt-In-First-Out (FIFO) Algorithm
+```
+cd ../userprog
+user@user-VirtualBox:~/nachos/nachos-4.0/code/userprog$ ./nachos -e ../test/matmult -e ../test/sort
+Schedule Type: RR
+Total threads number is 2
+Thread ../test/matmult is executing.
+Thread ../test/sort is executing.
+ Number of pages of ../test/matmult is 54
+ Number of pages of ../test/sort is 46
+return value: 7220
+return value: 1023
+No threads ready or runnable, and no pending interrupts.
+Assuming the program completed.
+Machine halting!
+
+Ticks: total 53245022, idle 35455664, system 103850, user 17685508
+Disk I/O: reads 1712, writes 1748
+Console I/O: reads 0, writes 0
+Paging: faults 1712
+Network I/O: packets received 0, sent 0
+```
+
+* Least Recently Used (LRU) Algorithm (Not Perfect)
+```
+cd ../userprog
+user@user-VirtualBox:~/nachos/nachos-4.0/code/userprog$ ./nachos -e ../test/matmult -e ../test/sort
+Schedule Type: RR
+Total threads number is 2
+Thread ../test/matmult is executing.
+Thread ../test/sort is executing.
+ Number of pages of ../test/matmult is 54
+ Number of pages of ../test/sort is 46
+return value: 7220
+return value: 1023
+No threads ready or runnable, and no pending interrupts.
+Assuming the program completed.
+Machine halting!
+
+Ticks: total 32077022, idle 14338599, system 53750, user 17684673
+Disk I/O: reads 877, writes 913
+Console I/O: reads 0, writes 0
+Paging: faults 877
+Network I/O: packets received 0, sent 0
+```
+
+Check out r11222007_project3_part1.pdf for details.
