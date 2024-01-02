@@ -67,4 +67,4 @@ Paging: faults 0
 Network I/O: packets received 0, sent 0
 
 ```
-Check out r11222007_project3_part2 for details.
+Check out r11222007_project3_part2.pdf for details.
