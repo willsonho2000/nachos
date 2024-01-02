@@ -31,9 +31,8 @@ cd nachos-4.0/code
 make
 ```
 
-## Check if you are success
+## Executions
 ```
-cd ../userprog
 user@user-VirtualBox:~/nachos/project3-part2/nachos-4.0/code/threads$ ./nachos 
 A: remaining 2
 A: remaining 1
@@ -68,3 +67,4 @@ Paging: faults 0
 Network I/O: packets received 0, sent 0
 
 ```
+Check out r11222007_project3_part2 for details.
