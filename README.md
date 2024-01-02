@@ -11,9 +11,18 @@ sudo apt install csh git
 
 ## Clone the repo and copy usr folder to /usr
 ```
-git clone https://github.com/Xueyi-Chen-David/Nachos.git
-cd Nachos
+git clone https://github.com/willsonho2000/nachos.git
+cd nachos
 sudo cp -r usr /
+```
+
+if you want to clone the specific branch.
+```
+git clone -b <branch_name> https://github.com/willsonho2000/nachos.git
+```
+or
+```
+git checkout -b <local_branch_name> origin/<branch_name>
 ```
 
 ## Go to code folder and make
@@ -22,10 +31,10 @@ cd nachos-4.0/code
 make
 ```
 
-## Check if you are success
+## Executions
 ```
 cd ../userprog
-user@user-VirtualBox:~/nachos/nachos-4.0/code/userprog$ ./nachos -e ../test/test1
+user@user-VirtualBox:~/nachos/nachos-4.0/code/userprog$ ./nachos -e ../test/test1 -e ../test/test2
 Total threads number is 1
 Thread ../test/test1 is executing.
 Print integer:9
@@ -43,3 +52,6 @@ Console I/O: reads 0, writes 0
 Paging: faults 0
 Network I/O: packets received 0, sent 0
 ```
+
+
+Check out r11222007_project1.pdf for details.
